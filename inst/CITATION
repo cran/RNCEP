@@ -1,0 +1,24 @@
+citHeader("To cite package 'RNCEP' in publications use:")
+     
+     ## R >= 2.8.0 passes package metadata to citation().
+     if(!exists("meta") || is.null(meta)) meta <- packageDescription("RNCEP")
+     year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+     vers <- paste("R package version", meta$Version)
+     
+     citEntry(entry="Article",
+              title = "RNCEP: global weather and climate data at your fingertips",
+              author = personList(as.person("Michael Kemp"),
+                                  as.person("Emiel van Loon"),
+                                  as.person("Judy Shamoun-Baranes"),
+                                  as.person("Willem Bouten")),
+              journal = "Ecography",
+			  volume = "submitted",
+			  year = year,
+              note = vers,
+     
+              textVersion =
+              paste("Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,",
+                    "and Bouten, W. (",
+                    year,
+                    "). RNCEP: global weather and climate data at your fingertips. ",
+                    vers, ".", sep=""))
