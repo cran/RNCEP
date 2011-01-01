@@ -1,6 +1,7 @@
 NCEP.interp <-
-function(variable, level, lat, lon, dt,
-					reanalysis2=FALSE, interpolate.space=TRUE, interpolate.time=TRUE, keep.unpacking.info=FALSE, return.units=TRUE, interp='linear', p=1){
+function(variable, level, lat, lon, dt,	reanalysis2=FALSE, 
+	interpolate.space=TRUE, interpolate.time=TRUE, keep.unpacking.info=FALSE,
+	return.units=TRUE, interp='linear', p=1, status.bar=TRUE){
 
 ## Make sure that the reference system has been specified ##
 if(is.null(level)) { stop("One of 'surface', 'gaussian', or a numeric pressure level must be given for 'level'") }
@@ -38,13 +39,13 @@ if(any(is.between(lon, -360, 360) == FALSE)) { stop("Longitudes must be between 
 
 ## Apply the correct function ##
 if(is.numeric(level)){
-	out <- NCEP.interp.pressure(variable=variable, lat=lat, lon=lon, dt=dt, pressure=level, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p)
+	out <- NCEP.interp.pressure(variable=variable, lat=lat, lon=lon, dt=dt, pressure=level, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p, status.bar=status.bar)
 } else
 if(level == 'surface'){
-	out <- NCEP.interp.surface(variable=variable, lat=lat, lon=lon, dt=dt, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p)
+	out <- NCEP.interp.surface(variable=variable, lat=lat, lon=lon, dt=dt, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p, status.bar=status.bar)
 } else
 if(level == 'gaussian'){
-	out <- NCEP.interp.gaussian(variable=variable, lat=lat, lon=lon, dt=dt, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p)
+	out <- NCEP.interp.gaussian(variable=variable, lat=lat, lon=lon, dt=dt, reanalysis2=reanalysis2, interpolate.space=interpolate.space, interpolate.time=interpolate.time, keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp, p=p, status.bar=status.bar)
 }
 
 return(out)

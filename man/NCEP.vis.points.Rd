@@ -39,7 +39,7 @@ See the examples below for a demonstration of how to apply these different argum
 
 \value{ A plot is produced.  No data are returned. }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
@@ -65,7 +65,7 @@ NCEP.vis.points(wx=gull$altitude, lats=gull$latitude,
 ## the measurement ##
 ss <- subset(gull, format(gull$datetime, "\%Y-\%m-\%d \%H:\%M:\%S") >=
     "2008-09-19 16:00:00" & format(gull$datetime, 
-    "\%Y-\%m-\%d \%H:\%M:\%S")	<= "2008-09-19 19:30:00")
+    "\%Y-\%m-\%d \%H:\%M:\%S") <= "2008-09-19 19:30:00")
 
 
 ## Now collect cloud cover, temperature, and wind

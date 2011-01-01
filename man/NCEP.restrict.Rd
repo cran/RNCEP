@@ -35,7 +35,7 @@ NCEP.restrict(wx.data, years2remove = NULL, months2remove = NULL,
   This function returns a three dimensional array (or a 2-D matrix if all but a single timestep is removed) of weather data.  The three dimensions are latitude, longitude, and datetime reflected in the dimnames of the output array.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl}}
 

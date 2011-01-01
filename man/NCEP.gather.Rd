@@ -15,20 +15,20 @@
 \usage{
 NCEP.gather(variable, level, months.minmax, years.minmax,
     lat.southnorth, lon.westeast, reanalysis2 = FALSE,
-    return.units = TRUE)
+    return.units = TRUE, status.bar=TRUE)
 
 ## NCEP.gather is a wrapper function that calls one of the
 ## following functions based on the value of level.
 ## Users should avoid using these functions directly.
 NCEP.gather.gaussian(variable, months.minmax, years.minmax,
     lat.minmax, lon.minmax, reanalysis2 = FALSE, 
-    return.units = TRUE)
+    return.units = TRUE, increments=NULL, pb=NULL)
 NCEP.gather.pressure(variable, months.minmax, years.minmax,
     lat.minmax, lon.minmax, pressure, reanalysis2 = FALSE, 
-    return.units = TRUE)
+    return.units = TRUE, increments=NULL, pb=NULL)
 NCEP.gather.surface(variable, months.minmax, years.minmax, 
     lat.minmax, lon.minmax, reanalysis2 = FALSE, 
-    return.units = TRUE)
+    return.units = TRUE, increments=NULL, pb=NULL)
 }
 
 \arguments{
@@ -40,9 +40,12 @@ NCEP.gather.surface(variable, months.minmax, years.minmax,
   \item{lat.minmax}{ Same as \code{lat.southnorth}. }
   \item{lon.westeast}{ Numeric. Specifies the range of longitudes to be obtained in the order\cr \code{c(westernmost, easternmost)}. }
   \item{lon.minmax}{ Same as \code{lat.westeast}. }
-  \item{reanalysis2}{Logical.  Should the data be obtained from the Reanalysis I dataset (default) or from Reanalysis II. }
-  \item{return.units}{ Logical.  Should the units of the variable being obtained be printed after the query finishes. }
+  \item{reanalysis2}{ Logical.  Should the data be obtained from the Reanalysis I dataset (default) or from Reanalysis II? }
+  \item{return.units}{ Logical.  Should the units of the variable being obtained be printed after the query finishes? }
   \item{pressure}{ Numeric.  A pressure level in millibars that is assigned automatically from the value of \code{level} when needed. }  
+  \item{status.bar}{ Logical.  Should a status bar be shown indicating the percentage of completion? }
+  \item{increments}{ Numeric.  This value, which is assigned automatically when using \code{NCEP.gather}, indicates the number of queries necessary to retrieve all data. }
+  \item{pb}{ An object of class "tkProgressBar", which is assigned automatically when using \code{NCEP.gather}. }
 }
 \details{
   \code{NCEP.gather} is a wrapper function that applies one of \code{NCEP.gather.gaussian},\cr \code{NCEP.gather.pressure}, or \code{NCEP.gather.surface} depending on the value of \code{level}.
@@ -64,6 +67,16 @@ NCEP.gather.surface(variable, months.minmax, years.minmax,
   Some variables are not in both the Reanalysis I and II datasets.  If a variable is chosen that is not in the specified dataset, the other dataset will be used... with a warning.
   
   
+  Very large queries may cause errors due to memory limitations in R.  
+  See \code{\link[base]{Memory-limits}} for more information or \code{\link[utils]{memory.limit}} to increase available memory.
+  Alternatively, consider querying subsets of your total desired range.
+  For instance, subset a very large spatial domain into several smaller regions, perform analyses on each geographical subset independently, and then combine the results.
+  Functions in the \code{\link[raster]{raster-package}} may be useful for managing subsets in the temporal domain.
+   
+  
+  Note that the status bar may be hidden behind an active R window.
+
+
   \code{variable} must be specified using one of the names found in the section \sQuote{Variable Naming Conventions} below...
 }
 
@@ -185,7 +198,28 @@ NCEP.gather.surface(variable, months.minmax, years.minmax,
   Optionally, the units of the variable being queried are printed upon completion.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ \bold{To cite package 'RNCEP' in publications use:}
+
+  Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,and Bouten, W.
+  (2011). RNCEP: global weather and climate data at your fingertips.
+  Methods in Ecology and Evolution, submitted.
+
+\bold{To cite the NCEP/NCAR Reanalysis dataset use:}
+
+  Kalnay et al. (1996), The NCEP/NCAR 40-year reanalysis project, Bull.
+  Amer. Meteor. Soc., 77, 437-470
+
+\bold{To cite the NCEP/DOE Reanalysis II dataset use:}
+
+  Kanamitsu et al. (2002), NCEP-DOE AMIP-II Reanalysis (R-2). Bull.
+  Amer. Meteor. Soc., 83, 1631-1643
+
+
+Please acknowledge the use of NCEP data in any publications by
+including text such as, \dQuote{NCEP Reanalysis data provided by the
+NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at
+\url{http://www.esrl.noaa.gov/psd/}}. They would also appreciate a copy of any publications using NCEP data.
+}
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
@@ -244,20 +278,22 @@ library(raster)
 ## Using the data from a query above ##
 ## First create a stacked raster object using the first 
 ## layer (i.e. datetime) of the weather data array ##
+## Notice the offset of 1.25 degrees (1/2 the spatial resolution)
+## to describe the limits of the bounding box not the points
 ras <- stack(raster(wx.extent1[,,1], crs="+proj=longlat +datum=WGS84", 
-    xmn=min(as.numeric(dimnames(wx.extent1)[[2]])),
-    xmx=max(as.numeric(dimnames(wx.extent1)[[2]])), 
-    ymn=min(as.numeric(dimnames(wx.extent1)[[1]])),
-    ymx=max(as.numeric(dimnames(wx.extent1)[[1]]))))
+    xmn=min(as.numeric(dimnames(wx.extent1)[[2]])) - 1.25,
+    xmx=max(as.numeric(dimnames(wx.extent1)[[2]])) + 1.25, 
+    ymn=min(as.numeric(dimnames(wx.extent1)[[1]])) - 1.25,
+    ymx=max(as.numeric(dimnames(wx.extent1)[[1]])) + 1.25))
 
 ## Then add each subsequent layer to the raster stack ##
 for(i in 2:length(dimnames(wx.extent1)[[3]])){
     ras <- addLayer(ras, raster(wx.extent1[,,i], 
         crs="+proj=longlat +datum=WGS84", 
-        xmn=min(as.numeric(dimnames(wx.extent1)[[2]])),
-        xmx=max(as.numeric(dimnames(wx.extent1)[[2]])), 
-        ymn=min(as.numeric(dimnames(wx.extent1)[[1]])),
-        ymx=max(as.numeric(dimnames(wx.extent1)[[1]]))))
+        xmn=min(as.numeric(dimnames(wx.extent1)[[2]])) - 1.25,
+        xmx=max(as.numeric(dimnames(wx.extent1)[[2]])) + 1.25, 
+        ymn=min(as.numeric(dimnames(wx.extent1)[[1]])) - 1.25,
+        ymx=max(as.numeric(dimnames(wx.extent1)[[1]])) + 1.25))
     }
 
 #######################################################
@@ -294,30 +330,42 @@ wx.reg <- interp.loess(x=rep(as.numeric(dimnames(wx.extent3)[[2]]),
         length(dimnames(wx.extent3)[[1]])))
 
 ## Create a stacked raster object from the first layer 
-## after interpolation ##
-ras <- stack(raster(wx.reg$z, crs="+proj=longlat +datum=WGS84", 
-    xmn=min(as.numeric(wx.reg$x)), xmx=max(as.numeric(wx.reg$x)), 
-    ymn=min(as.numeric(wx.reg$y)), ymx=max(as.numeric(wx.reg$y))))
+## (i.e. datetime) after interpolation ##
+## Again, notice the offset (1/2 the resolution) ##
+## Also note that the matrix (i.e. wx.reg$z) must be flipped 
+## along the y axis and transposed ##
+## This is required b/c of the interpolation performed above ##
+ras <- stack(raster(t(wx.reg$z[,length(wx.reg$y):1]), 
+    crs="+proj=longlat +datum=WGS84", 
+    xmn=min(as.numeric(wx.reg$x)) - abs(diff(wx.reg$x)[1]/2),
+    xmx=max(as.numeric(wx.reg$x)) + abs(diff(wx.reg$x)[1]/2), 
+    ymn=min(as.numeric(wx.reg$y)) - abs(diff(wx.reg$y)[1]/2),
+    ymx=max(as.numeric(wx.reg$y)) + abs(diff(wx.reg$y)[1]/2)))
 	
 ## Add each subsequent layer in the array to the raster stack ##
 ## after interpolating onto a regular grid ##
+
 for(i in 2:length(dimnames(wx.extent3)[[3]])){
 
-    ## Interpolate
-    t.wx.reg <- interp.loess(x=rep(as.numeric(dimnames(wx.extent3)[[2]]), 
-        each=length(dimnames(wx.extent3)[[1]])), 
-        y=rep(as.numeric(dimnames(wx.extent3)[[1]]), 
-        length(dimnames(wx.extent3)[[2]])), 
-        z=as.vector(wx.extent3[,,i]), span=0.6, 
-        gridlen=c(length(dimnames(wx.extent3)[[2]]),
-        length(dimnames(wx.extent3)[[1]])))
-
-    ## Add layer to stack
-    ras <- addLayer(ras, raster(t.wx.reg$z,crs="+proj=longlat +datum=WGS84",
-        xmn=min(as.numeric(t.wx.reg$x)),xmx=max(as.numeric(t.wx.reg$x)), 
-        ymn=min(as.numeric(t.wx.reg$y)),ymx=max(as.numeric(t.wx.reg$y))))
-    }
-
+  ## Interpolate
+  t.wx.reg <- interp.loess(x=rep(as.numeric(dimnames(wx.extent3)[[2]]), 
+      each=length(dimnames(wx.extent3)[[1]])), 
+      y=rep(as.numeric(dimnames(wx.extent3)[[1]]), 
+      length(dimnames(wx.extent3)[[2]])), 
+      z=as.vector(wx.extent3[,,i]), span=0.6, 
+      gridlen=c(length(dimnames(wx.extent3)[[2]]),
+      length(dimnames(wx.extent3)[[1]])))
+  
+  ## Note the offset ##
+  ## Note flipping the matrix along the y axis and transposing ##
+  ## Add layer to stack
+  ras <- addLayer(ras, raster(t(t.wx.reg$z[,length(t.wx.reg$y):1]),
+    crs="+proj=longlat +datum=WGS84",
+    xmn=min(as.numeric(t.wx.reg$x)) - abs(diff(t.wx.reg$x)[1]/2),
+    xmx=max(as.numeric(t.wx.reg$x)) + abs(diff(t.wx.reg$x)[1]/2), 
+    ymn=min(as.numeric(t.wx.reg$y)) - abs(diff(t.wx.reg$y)[1]/2),
+    ymx=max(as.numeric(t.wx.reg$y)) + abs(diff(t.wx.reg$y)[1]/2)))
+  }
 
 ##################################################################
 ##################################################################

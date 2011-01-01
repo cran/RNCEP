@@ -1,6 +1,7 @@
 NCEP.interp.pressure <-
-function(variable, lat, lon, dt, pressure,
-					reanalysis2=FALSE, interpolate.space=TRUE, interpolate.time=TRUE, keep.unpacking.info=FALSE, return.units=TRUE, interp='linear', p=1){
+function(variable, lat, lon, dt, pressure, reanalysis2=FALSE, 
+	interpolate.space=TRUE, interpolate.time=TRUE, keep.unpacking.info=FALSE,
+	return.units=TRUE, interp='linear', p=1, status.bar=TRUE){
 
 ## Latitude and longitude should be given in decimal degrees ##
 ## 'pressure' can be one of 1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 70, 50, 30, 20, 10
@@ -18,6 +19,10 @@ function(variable, lat, lon, dt, pressure,
 ## Determine the number of points the function will calculate ##
 iterations <- max(c(length(variable),length(lat), length(lon), length(dt), length(pressure), length(reanalysis2), length(interpolate.space), length(interpolate.time), length(interp), length(p)))
 
+## If a status bar is desired, describe the status bar parameters ##
+if(status.bar){require(tcltk)
+	pb <- tkProgressBar(title="Total progress", min = 0, max=iterations, width=300) 
+		} else { pb <- NULL }
 
 ########################################################################################
 ## Recycle any variable that is shorter than the length of the longest input variable ##
@@ -71,6 +76,7 @@ out.temp <- tempfile()
 ## Create the output variable to store output data ##
 wx.out <- c()
 units <- c()
+spread <- c()
 
 
 ##################################################################
@@ -119,8 +125,17 @@ if(lon[i] >= 357.5){
 		reanalysis2=reanalysis2[i], interpolate.space=interpolate.space[i], interpolate.time=interpolate.time[i],
 		keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp[i], p=p[i])
 	wx.out[i] <- temp.out$wx.out
+	spread[i] <- temp.out$spread
 	if(return.units == TRUE){
 		units[i] <- as.character(temp.out$units) }
+	## Update the status bar ##
+	if(!is.null(pb)){
+		cval <- pb$getVal()
+		Sys.sleep(0.000001)
+		setTkProgressBar(pb, cval+1, label=paste(round((cval+1)/iterations*100, 0), "% done"))
+		if(pb$getVal() == iterations) {close(pb)}
+		}
+	## Proceed to the next iteration ##	
 	next }
 
 ###########################################
@@ -210,6 +225,7 @@ if(format(dt.f, "%m-%d %H:%M:%S") > "12-31 17:59:59") {
 		reanalysis2=reanalysis2[i], interpolate.space=interpolate.space[i], interpolate.time=interpolate.time[i],
 		keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp[i], p=p[i])
 	wx.out[i] <- temp.out$wx.out
+	spread[i] <- temp.out$spread
 	if(return.units == TRUE){
 		units[i] <- as.character(temp.out$units) }
 	next }
@@ -280,54 +296,85 @@ outdata <- read.table(file=out.temp, sep=',', skip=13, header=FALSE, na.strings=
 
 ########################################################################
 ## Put the weather values in the proper order, sorted by lat/lon/time ##
-rec0 <- ifelse(outdata$V2[2] == missing.values, NA, outdata$V2[2] * scale.factor + add.offset)
-rec1 <- ifelse(outdata$V2[4] == missing.values, NA, outdata$V2[4] * scale.factor + add.offset)
-rec2 <- ifelse(outdata$V3[2] == missing.values, NA, outdata$V3[2] * scale.factor + add.offset)
-rec3 <- ifelse(outdata$V3[4] == missing.values, NA, outdata$V3[4] * scale.factor + add.offset)
-rec4 <- ifelse(outdata$V2[1] == missing.values, NA, outdata$V2[1] * scale.factor + add.offset)
-rec5 <- ifelse(outdata$V2[3] == missing.values, NA, outdata$V2[3] * scale.factor + add.offset)
-rec6 <- ifelse(outdata$V3[1] == missing.values, NA, outdata$V3[1] * scale.factor + add.offset)
-rec7 <- ifelse(outdata$V3[3] == missing.values, NA, outdata$V3[3] * scale.factor + add.offset)
+rec0.1 <- ifelse(outdata$V2[2] == missing.values, NA, outdata$V2[2] * scale.factor + add.offset)
+rec1.1 <- ifelse(outdata$V2[4] == missing.values, NA, outdata$V2[4] * scale.factor + add.offset)
+rec2.1 <- ifelse(outdata$V3[2] == missing.values, NA, outdata$V3[2] * scale.factor + add.offset)
+rec3.1 <- ifelse(outdata$V3[4] == missing.values, NA, outdata$V3[4] * scale.factor + add.offset)
+rec4.1 <- ifelse(outdata$V2[1] == missing.values, NA, outdata$V2[1] * scale.factor + add.offset)
+rec5.1 <- ifelse(outdata$V2[3] == missing.values, NA, outdata$V2[3] * scale.factor + add.offset)
+rec6.1 <- ifelse(outdata$V3[1] == missing.values, NA, outdata$V3[1] * scale.factor + add.offset)
+rec7.1 <- ifelse(outdata$V3[3] == missing.values, NA, outdata$V3[3] * scale.factor + add.offset)
 
 ######################################
 ## Interpolate the weather variable ##
 if(interp[i] == 'IDW' | interp[i] == 'idw'){
-t1 <- sum((lat0.lon0.f*rec0) + (lat0.lon1.f*rec2) + (lat1.lon0.f*rec4) + (lat1.lon1.f*rec6))
-t2 <- sum((lat0.lon0.f*rec1) + (lat0.lon1.f*rec3) + (lat1.lon0.f*rec5) + (lat1.lon1.f*rec7))
+t1 <- sum((lat0.lon0.f*rec0.1) + (lat0.lon1.f*rec2.1) + (lat1.lon0.f*rec4.1) + (lat1.lon1.f*rec6.1))
+t2 <- sum((lat0.lon0.f*rec1.1) + (lat0.lon1.f*rec3.1) + (lat1.lon0.f*rec5.1) + (lat1.lon1.f*rec7.1))
 wx.out[i] <- MK.interp(t1, t2, f0ts)
 
 } else {
 
 ## First in latitude ##
-rec0 <- MK.interp(rec0, rec4, f0lat)
-rec1 <- MK.interp(rec1, rec5, f0lat)
-rec2 <- MK.interp(rec2, rec6, f0lat)
-rec3 <- MK.interp(rec3, rec7, f0lat)
+rec0 <- MK.interp(rec0.1, rec4.1, f0lat)
+rec1 <- MK.interp(rec1.1, rec5.1, f0lat)
+rec2 <- MK.interp(rec2.1, rec6.1, f0lat)
+rec3 <- MK.interp(rec3.1, rec7.1, f0lat)
 ## Then in longitude ##
 rec0 <- MK.interp(rec0, rec2, f0lon)
 rec1 <- MK.interp(rec1, rec3, f0lon)
 ## Finally in time ##
 wx.out[i] <- MK.interp(rec0, rec1, f0ts)
+
 }
 
+## Calculate the standard deviation of the values ##
+if(interpolate.space[i] == TRUE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(rec0.1,rec1.1,rec2.1,rec3.1,rec4.1,rec5.1,rec6.1,rec7.1))
+		} else 
+	if(f0ts == 1){
+		spread[i] <- sd(c(rec1.1,rec3.1,rec5.1,rec7.1))
+		} else 
+		spread[i] <- sd(c(rec0.1,rec2.1,rec4.1,rec6.1))
+	} else 
+if(interpolate.space[i] == FALSE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(rec0, rec1))
+		} else 
+	if(interpolate.time[i] == FALSE){
+		spread[i] <- NA
+		}
+	}
 
 #################################################
 ## Clear some variables for the next iteration ##
-rec0 <- c()
-rec1 <- c()
-rec2 <- c()
-rec3 <- c()
-rec4 <- c()
-rec5 <- c()
-rec6 <- c()
-rec7 <- c()
+rec0.1 <- c()
+rec1.1 <- c()
+rec2.1 <- c()
+rec3.1 <- c()
+rec4.1 <- c()
+rec5.1 <- c()
+rec6.1 <- c()
+rec7.1 <- c()
 outdata <- c()
+
+## Update the status bar ##
+	if(!is.null(pb)){
+		cval <- pb$getVal()
+		Sys.sleep(0.000001)
+		setTkProgressBar(pb, cval+1, label=paste(round((cval+1)/iterations*100, 0), "% done"))
+		}
+
 
 }  ## END FOR LOOP ##
 
 #########################################
 ## Disconnect from the temporary files ##
 unlink(c(scale.offset.missingvals.temp, out.temp))
+
+##########################
+## Close the status bar ##
+if(!is.null(pb)) { if(pb$getVal() == iterations) {close(pb)} }
 
 #####################
 ## Print the units ##
@@ -340,6 +387,7 @@ if(return.units == TRUE){
 
 #############################
 ## Return the desired data ##
+attr(wx.out, "standard deviation") <- spread
 return(wx.out)
 
 }  ## END FUNCTION ##

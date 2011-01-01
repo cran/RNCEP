@@ -15,23 +15,24 @@
 \usage{ NCEP.interp(variable, level, lat, lon, dt, reanalysis2 = FALSE,
     interpolate.space = TRUE, interpolate.time = TRUE,
     keep.unpacking.info = FALSE, return.units = TRUE,
-    interp = 'linear', p = 1) 
+    interp = 'linear', p = 1, status.bar=TRUE) 
 
 ## NCEP.interp is a wrapper function that calls one of the
 ## following functions based on the value of level.
 ## Users should avoid using these functions directly.
+
 NCEP.interp.gaussian(variable, lat, lon, dt, reanalysis2 = FALSE,
     interpolate.space = TRUE, interpolate.time = TRUE,
     keep.unpacking.info = FALSE, return.units = TRUE,
-    interp = 'linear', p = 1) 
+    interp = 'linear', p = 1, status.bar=TRUE) 
 NCEP.interp.pressure(variable, lat, lon, dt, pressure,
     reanalysis2 = FALSE, interpolate.space = TRUE, 
     interpolate.time = TRUE, keep.unpacking.info = FALSE, 
-    return.units = TRUE, interp = 'linear', p = 1) 
+    return.units = TRUE, interp = 'linear', p = 1, status.bar=TRUE) 
 NCEP.interp.surface(variable, lat, lon, dt, reanalysis2 = FALSE,
     interpolate.space = TRUE, interpolate.time = TRUE,
     keep.unpacking.info = FALSE, return.units = TRUE,
-    interp = 'linear', p = 1) 
+    interp = 'linear', p = 1, status.bar=TRUE) 
 }
 
 \arguments{
@@ -48,19 +49,20 @@ NCEP.interp.surface(variable, lat, lon, dt, reanalysis2 = FALSE,
   \item{interp}{ Method of interpolation.  One of 'linear' (default) or 'IDW'.  See \sQuote{Details}.  }
   \item{p}{ A positive real number. The power parameter controlling interpolation. Only matters when \code{interp} is 'IDW'. See \sQuote{Details}.  }
   \item{pressure}{ Numeric.  A pressure level in millibars that is assigned automatically from the value of \code{level} when needed. }    
-  }
+  \item{status.bar}{ Logical.  Should a status bar be shown indicating the percentage of completion? }
+ }
 
 \details{
   \code{NCEP.interp} is a wrapper function that applies one of \code{NCEP.interp.gaussian},\cr \code{NCEP.interp.pressure}, or \code{NCEP.interp.surface} depending
   on the value of \code{level}.
 
   
-  \code{level} must specify one of either \sQuote{gaussian} or \sQuote{surface} or give a numerical pressure level in millibars.  Numeric pressure levels must be one of 1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 70, 50, 30, 20, 10
+  \code{level} must specify one of either \sQuote{gaussian} or \sQuote{surface} or give a numerical pressure level in millibars.  Numeric pressure levels must be one of 1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 70, 50, 30, 20, 10.
   See \sQuote{Variable Naming Conventions} below to determine if your variable of interest is stored relative to the surface, a pressure level, or a T62 Gaussian grid.
   Note that variables on a T62 Gaussian grid are evenly spaced in longitude but unevenly spaced in latitude while variables from either the surface or a particular pressure level are evenly spaced in both latitude and longitude (2.5 deg. x 2.5 deg.).
   
   
-  All arguments except \code{keep.unpacking.info} and \code{return.units} can be vectors.  The remaining arguments are recycled to the length of the longest arguement.
+  All arguments except \code{keep.unpacking.info}, \code{return.units}, and \code{status.bar} can be vectors.  The remaining arguments are recycled to the length of the longest arguement.
 
   
   \code{lat} and \code{lon} should be given in decimal degrees.  Latitudes south of the equator should be negative.  Longitudes west of the Prime Meridian can be specified using either positive (i.e. 350) or negative (i.e. -10) notation.
@@ -68,14 +70,21 @@ NCEP.interp.surface(variable, lat, lon, dt, reanalysis2 = FALSE,
   
   All interpolation is performed assuming a spherical (rather than a planar) grid.
   
+  
   When \code{interp} is 'IDW', 2-D spatial interpolation is done using inverse distance weighting followed by a 1-D linear interpolation in time.
   When \code{interp} is 'linear', the function performs a trilinear interpolation in latitude, longitude, and time.
-  If \code{interpolate.space} or \code{interpolate.time} is \code{FALSE}, the function performs \sQuote{nearest neighbor} interpolation and returns data from the grid point closest in space or time, respectively.
-
+  If \code{interpolate.space} or\cr \code{interpolate.time} is \code{FALSE}, the function performs \sQuote{nearest neighbor} interpolation and returns data from the grid point closest in space or time, respectively.
   The numerical value of \code{p} controls the degree of smoothing in the interpolation only when \code{interp} is 'IDW'.  Greater values of \code{p} assign greater influence to values closest to the interpolated point. For 0 < \code{p} < 1 peaks over the interpolated point remain smooth.  As \code{p} increases beyond 1, the peaks become sharper.
   
   
-  Unpacking information is unique to each variable and dataset.  Therefore, \code{keep.unpacking.info} can be made \code{TRUE} as long as only one variable from one dataset (i.e. Reanalysis I or II) is queried in a single function call, even for multiple times and locations.  \code{keep.unpacking.info} will be made \code{FALSE}, if necessary, with a warning.
+  Variables in these datasets on a T62 Gaussian grid describe conditions over an interval of time rather than at a particular point in time. (see \sQuote{Variable Naming Conventions} below)
+  As such, it is not appropriate to perform temporal interpolation on these varaibles.
+  Therefore, \code{NCEP.interp} automatically sets \code{interpolate.time} to \code{FALSE} when querying one of these variables, 
+  and returns the data corresponding to the interval within which the specified datetime falls.  
+  Spatial interpolation is still performed as long as \code{interpolate.space} is \code{TRUE}.
+  
+  
+  Unpacking information is unique to each variable and dataset.  Therefore,\cr \code{keep.unpacking.info} can be made \code{TRUE} as long as only one variable from one dataset (i.e. Reanalysis I or II) is queried in a single function call, even for multiple times and locations.  \code{keep.unpacking.info} will be made \code{FALSE}, if necessary, with a warning.
 
 
   The function will run faster when \code{keep.unpacking.info} is \code{TRUE}.
@@ -86,6 +95,19 @@ NCEP.interp.surface(variable, lat, lon, dt, reanalysis2 = FALSE,
   
   Some variables are not in both the Reanalysis I and II datasets.  If a variable is chosen that is not in the specified dataset, the other dataset will be used... with a warning.
 
+  The function also returns, as an attribute, standard deviation calculated on all data used in the interpolation.  
+  This provides an indication of the precision of an interpolated result described in the same units as the interpolated variable.
+  Smaller values indicate that there is less variability among the points used in interpolation.
+  Standard deviation is only calcuated on the points used in the interpolation.  Therefore, if \code{interpolate.time} and \code{interpolate.space} are both \code{TRUE}, 
+  standard deviation is calculated on eight points.\cr
+  If \code{interpolate.time} is \code{FALSE} and \code{interpolate.space} is \code{TRUE},
+  standard deviation is calculated on four points. If \code{interpolate.time} is \code{TRUE} and \code{interpolate.space} is \code{FALSE}, standard deviation
+  is calculated on only two points.  If \code{interpolate.time} and \code{interpolate.space} are both \code{FALSE}, standard deviation is not calculated and \code{NA} is returned.
+  This measure of precision is the same irrespective of \code{interp}.
+  
+  
+  Note that the status bar may be hidden behind an active R window.
+  
   
   \code{variable} must be specified using one of the names found in the section \sQuote{Variable Naming Conventions} below...
 }
@@ -202,12 +224,32 @@ NCEP.interp.surface(variable, lat, lon, dt, reanalysis2 = FALSE,
 }
 
 \value{
-A vector of data values reflecting each datetime/location combination in the function call.
+A vector of interpolated results with the associated standard deviation of the points used to perform the interpolation as an attribute.
 
 Optionally, the units of the variable being queried are printed when the function completes.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ \bold{To cite package 'RNCEP' in publications use:}
+
+  Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,and Bouten, W.
+  (2011). RNCEP: global weather and climate data at your fingertips.
+  Methods in Ecology and Evolution, submitted.
+
+\bold{To cite the NCEP/NCAR Reanalysis dataset use:}
+
+  Kalnay et al. (1996), The NCEP/NCAR 40-year reanalysis project, Bull.
+  Amer. Meteor. Soc., 77, 437-470
+
+\bold{To cite the NCEP/DOE Reanalysis II dataset use:}
+
+  Kanamitsu et al. (2002), NCEP-DOE AMIP-II Reanalysis (R-2). Bull.
+  Amer. Meteor. Soc., 83, 1631-1643
+
+
+Please acknowledge the use of NCEP data in any publications by
+including text such as, \dQuote{NCEP Reanalysis data provided by the
+NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at
+\url{http://www.esrl.noaa.gov/psd/}}. They would also appreciate a copy of any publications using NCEP data.}
 
 \author{Michael U. Kemp \email{M.U.Kemp@UvA.nl}}
 
@@ -287,7 +329,7 @@ data(gull)
 ## the measurement ##
 ss <- subset(gull, format(gull$datetime, "\%Y-\%m-\%d \%H:\%M:\%S") >=
     "2008-09-19 16:00:00" & format(gull$datetime, 
-    "\%Y-\%m-\%d \%H:\%M:\%S")	<= "2008-09-19 19:30:00")
+    "\%Y-\%m-\%d \%H:\%M:\%S") <= "2008-09-19 19:30:00")
 
 
 ## Now collect wind information for each point in the subset ##

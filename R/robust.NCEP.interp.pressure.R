@@ -71,6 +71,7 @@ out.temp.east.year2 <- tempfile()
 ## Create the output variable to store output data ##
 wx.out <- c()
 units <- c()
+spread <- c()
 
 ##################################################################
 ## Create a function to linearly interpolate between two points ##
@@ -294,45 +295,65 @@ outdata.east.year2 <- read.table(file=out.temp.east.year2, sep=',', skip=13, hea
 
 ########################################################################
 ## Put the weather values in the proper order, sorted by lat/lon/time ##
-rec0 <- ifelse(outdata.west.year1$V2[2] == missing.values, NA, outdata.west.year1$V2[2] * scale.factor + add.offset)
-rec1 <- ifelse(outdata.west.year2$V2[2] == missing.values, NA, outdata.west.year2$V2[2] * scale.factor + add.offset)
-rec2 <- ifelse(outdata.east.year1$V2[2] == missing.values, NA, outdata.east.year1$V2[2] * scale.factor + add.offset)
-rec3 <- ifelse(outdata.east.year2$V2[2] == missing.values, NA, outdata.east.year2$V2[2] * scale.factor + add.offset)
-rec4 <- ifelse(outdata.west.year1$V2[1] == missing.values, NA, outdata.west.year1$V2[1] * scale.factor + add.offset)
-rec5 <- ifelse(outdata.west.year2$V2[1] == missing.values, NA, outdata.west.year2$V2[1] * scale.factor + add.offset)
-rec6 <- ifelse(outdata.east.year1$V2[1] == missing.values, NA, outdata.east.year1$V2[1] * scale.factor + add.offset)
-rec7 <- ifelse(outdata.east.year2$V2[1] == missing.values, NA, outdata.east.year2$V2[1] * scale.factor + add.offset)
+rec0.1 <- ifelse(outdata.west.year1$V2[2] == missing.values, NA, outdata.west.year1$V2[2] * scale.factor + add.offset)
+rec1.1 <- ifelse(outdata.west.year2$V2[2] == missing.values, NA, outdata.west.year2$V2[2] * scale.factor + add.offset)
+rec2.1 <- ifelse(outdata.east.year1$V2[2] == missing.values, NA, outdata.east.year1$V2[2] * scale.factor + add.offset)
+rec3.1 <- ifelse(outdata.east.year2$V2[2] == missing.values, NA, outdata.east.year2$V2[2] * scale.factor + add.offset)
+rec4.1 <- ifelse(outdata.west.year1$V2[1] == missing.values, NA, outdata.west.year1$V2[1] * scale.factor + add.offset)
+rec5.1 <- ifelse(outdata.west.year2$V2[1] == missing.values, NA, outdata.west.year2$V2[1] * scale.factor + add.offset)
+rec6.1 <- ifelse(outdata.east.year1$V2[1] == missing.values, NA, outdata.east.year1$V2[1] * scale.factor + add.offset)
+rec7.1 <- ifelse(outdata.east.year2$V2[1] == missing.values, NA, outdata.east.year2$V2[1] * scale.factor + add.offset)
 
 ######################################
 ## Interpolate the weather variable ##
 if(interp[i] == 'IDW' | interp[i] == 'idw'){
-t1 <- sum((lat0.lon0.f*rec0) + (lat0.lon1.f*rec2) + (lat1.lon0.f*rec4) + (lat1.lon1.f*rec6))
-t2 <- sum((lat0.lon0.f*rec1) + (lat0.lon1.f*rec3) + (lat1.lon0.f*rec5) + (lat1.lon1.f*rec7))
+t1 <- sum((lat0.lon0.f*rec0.1) + (lat0.lon1.f*rec2.1) + (lat1.lon0.f*rec4.1) + (lat1.lon1.f*rec6.1))
+t2 <- sum((lat0.lon0.f*rec1.1) + (lat0.lon1.f*rec3.1) + (lat1.lon0.f*rec5.1) + (lat1.lon1.f*rec7.1))
 wx.out[i] <- MK.interp(t1, t2, f0ts)
 
 } else {
 
 ## First in latitude ##
-rec0 <- MK.interp(rec0, rec4, f0lat)
-rec1 <- MK.interp(rec1, rec5, f0lat)
-rec2 <- MK.interp(rec2, rec6, f0lat)
-rec3 <- MK.interp(rec3, rec7, f0lat)
+rec0 <- MK.interp(rec0.1, rec4.1, f0lat)
+rec1 <- MK.interp(rec1.1, rec5.1, f0lat)
+rec2 <- MK.interp(rec2.1, rec6.1, f0lat)
+rec3 <- MK.interp(rec3.1, rec7.1, f0lat)
 ## Then in longitude ##
 rec0 <- MK.interp(rec0, rec2, f0lon)
 rec1 <- MK.interp(rec1, rec3, f0lon)
 ## Finally in time ##
 wx.out[i] <- MK.interp(rec0, rec1, f0ts)
+
 }
+
+## Calculate the standard deviation of the values ##
+if(interpolate.space[i] == TRUE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(rec0.1,rec1.1,rec2.1,rec3.1,rec4.1,rec5.1,rec6.1,rec7.1))
+		} else 
+	if(f0ts == 1){
+		spread[i] <- sd(c(rec1.1,rec3.1,rec5.1,rec7.1))
+		} else 
+		spread[i] <- sd(c(rec0.1,rec2.1,rec4.1,rec6.1))
+	} else 
+if(interpolate.space[i] == FALSE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(rec0, rec1))
+		} else 
+	if(interpolate.time[i] == FALSE){
+		spread[i] <- NA
+		}
+	}
 #################################################
 ## Clear some variables for the next iteration ##
-rec0 <- c()
-rec1 <- c()
-rec2 <- c()
-rec3 <- c()
-rec4 <- c()
-rec5 <- c()
-rec6 <- c()
-rec7 <- c()
+rec0.1 <- c()
+rec1.1 <- c()
+rec2.1 <- c()
+rec3.1 <- c()
+rec4.1 <- c()
+rec5.1 <- c()
+rec6.1 <- c()
+rec7.1 <- c()
 outdata.west.year1 <- c()
 outdata.west.year2 <- c()
 outdata.east.year1 <- c()
@@ -347,7 +368,7 @@ unlink(c(out.temp.west.year1, out.temp.west.year2, out.temp.east.year1, out.temp
 
 #############################
 ## Return the desired data ##
-return(data.frame(wx.out, units))
+return(data.frame(wx.out, units, spread))
 
 }  ## END FUNCTION ##
 

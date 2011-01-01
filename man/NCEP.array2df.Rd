@@ -29,7 +29,7 @@ NCEP.array2df(wx.data, var.names=NULL)
   A data frame with the components of latitudes, longitude, datetime, and the weather variable(s) from the input data array(s).
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 

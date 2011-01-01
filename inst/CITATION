@@ -5,20 +5,47 @@ citHeader("To cite package 'RNCEP' in publications use:")
      year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
      vers <- paste("R package version", meta$Version)
      
-     citEntry(entry="Article",
-              title = "RNCEP: global weather and climate data at your fingertips",
-              author = personList(as.person("Michael Kemp"),
-                                  as.person("Emiel van Loon"),
-                                  as.person("Judy Shamoun-Baranes"),
-                                  as.person("Willem Bouten")),
-              journal = "Ecography",
-			  volume = "submitted",
-			  year = year,
-              note = vers,
-     
-              textVersion =
-              paste("Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,",
+citEntry(entry="Article",
+		title = "RNCEP: global weather and climate data at your fingertips",
+        author = personList(as.person("Michael Kemp"),
+			as.person("Emiel van Loon"),
+			as.person("Judy Shamoun-Baranes"),
+			as.person("Willem Bouten")),
+		journal = "Ecography",
+		volume = "submitted",
+		year = year,
+		note = vers,
+		textVersion = paste("Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,",
                     "and Bouten, W. (",
                     year,
-                    "). RNCEP: global weather and climate data at your fingertips. ",
+                    "). RNCEP: global weather and climate data at your fingertips. Methods in Ecology and Evolution, submitted, ",
                     vers, ".", sep=""))
+
+
+citEntry(entry="Article",
+		title="The NCEP/NCAR 40-year reanalysis project",
+		author="Kalnay et al.",
+		journal="Bull. Amer. Meteor. Soc.",
+		volume=77,
+		year=1996,
+		pages=437-470,
+		textVersion = "Kalnay et al. (1996), The NCEP/NCAR 40-year reanalysis project, Bull. Amer. Meteor. Soc., 77, 437-470",
+		header = "To cite the NCEP/NCAR Reanalysis dataset use:")
+
+
+citEntry(entry="Article",
+		title="NCEP/DOE AMIP-II Reanalysis (R-2)",
+		author="Kanamitsu et al.",
+		journal="Bull. Amer. Meteor. Soc.",
+		volume=83,
+		year=2002,
+		pages=1631-1643,
+		textVersion = "Kanamitsu et al. (2002), NCEP-DOE AMIP-II Reanalysis (R-2). Bull. Amer. Meteor. Soc., 83, 1631-1643",
+		header = "To cite the NCEP/DOE Reanalysis II dataset use:")
+
+		
+citFooter("Please acknowledge the use of NCEP data in any publications",
+		"by including text such as... 
+		NCEP Reanalysis data provided by the NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at http://www.esrl.noaa.gov/psd/.
+		
+		They would also appreciate a copy of any publications using NCEP data.")

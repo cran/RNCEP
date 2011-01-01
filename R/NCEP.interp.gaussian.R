@@ -1,6 +1,7 @@
 NCEP.interp.gaussian <-
-function(variable, lat, lon, dt, 
-					reanalysis2=FALSE, interpolate.space=TRUE, interpolate.time=TRUE, keep.unpacking.info=FALSE, return.units=TRUE, interp='linear', p=1){
+function(variable, lat, lon, dt, reanalysis2=FALSE, interpolate.space=TRUE,
+	interpolate.time=TRUE, keep.unpacking.info=FALSE, return.units=TRUE,
+	interp='linear', p=1, status.bar=TRUE){
 
 ## Latitude and longitude should be given in decimal degrees ##
 ## Variables must be given using the following naming conventions...
@@ -70,6 +71,10 @@ function(variable, lat, lon, dt,
 ## Determine the number of points the function will calculate ##
 iterations <- max(c(length(variable),length(lat), length(lon), length(dt), length(reanalysis2), length(interpolate.space), length(interpolate.time), length(interp), length(p)))
 
+## If a status bar is desired, describe the status bar parameters ##
+if(status.bar){require(tcltk)
+	pb <- tkProgressBar(title="Total progress", min = 0, max=iterations, width=300) 
+		} else { pb <- NULL }
 
 ########################################################################################
 ## Recycle any variable that is shorter than the length of the longest input variable ##
@@ -102,6 +107,7 @@ possible.variables <- c('air.2m','icec.sfc','pevpr.sfc','pres.sfc','runof.sfc','
 				'nswrs.sfc','prate.sfc','shtfl.sfc','uflx.sfc','ugwd.sfc','ulwrf.sfc','ulwrf.ntat','uswrf.sfc','uswrf.ntat','vbdsf.sfc','vddsf.sfc','vflx.sfc',
 				'vgwd.sfc','csulf.ntat','csusf.ntat','dswrf.ntat','pres.hcb','pres.hct','pres.lcb','pres.lct','pres.mcb','pres.mct',
 				'tcdc.eatm','ulwrf.ntat','uswrf.ntat')
+hindcast.variables <- c('tmax.2m','tmin.2m')
 
 
 
@@ -127,6 +133,7 @@ out.temp <- tempfile()
 ## Create the output variable to store output data ##
 wx.out <- c()
 units <- c()
+spread <- c()
 
 
 ##################################################################
@@ -176,8 +183,17 @@ if(lon[i] >= 358.125){
 		reanalysis2=reanalysis2[i], interpolate.space=interpolate.space[i], interpolate.time=interpolate.time[i],
 		keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp[i], p=p[i])
 	wx.out[i] <- temp.out$wx.out
+	spread[i] <- temp.out$spread
 	if(return.units == TRUE){
 		units[i] <- as.character(temp.out$units) }
+	## Update the status bar ##
+	if(!is.null(pb)){
+		cval <- pb$getVal()
+		Sys.sleep(0.000001)
+		setTkProgressBar(pb, cval+1, label=paste(round((cval+1)/iterations*100, 0), "% done"))
+		if(pb$getVal() == iterations) {close(pb)}
+		}
+	## Proceed to the next iteration ##	
 	next }
 
 ###########################################
@@ -231,8 +247,7 @@ year <- as.numeric(format(dt.f, "%Y"))
 idatetime <-  floor(as.numeric(as.POSIXct(dt[i], tz='UTC')) / tgridsize)
 ts0 <- idatetime * tgridsize
 ts1 <- ts0 + tgridsize 
-f0ts <- (as.numeric(as.POSIXct(dt[i], tz='UTC')) - ts0) / tgridsize
-f0ts <- ifelse(interpolate.time[i] == FALSE, round(f0ts, digits=0), f0ts)
+f0ts <- ifelse(variable[i] %in% hindcast.variables, 1, 0)
 } else
 
 if(interp[i] == 'linear'){
@@ -254,8 +269,7 @@ year <- as.numeric(format(dt.f, "%Y"))
 idatetime <-  floor(as.numeric(as.POSIXct(dt[i], tz='UTC')) / tgridsize)
 ts0 <- idatetime * tgridsize
 ts1 <- ts0 + tgridsize 
-f0ts <- (as.numeric(as.POSIXct(dt[i], tz='UTC')) - ts0) / tgridsize
-f0ts <- ifelse(interpolate.time[i] == FALSE, round(f0ts, digits=0), f0ts)
+f0ts <- ifelse(variable[i] %in% hindcast.variables, 1, 0)
 } else stop("'interp' must be either 'IDW' or 'linear'")
 
 ##############################################
@@ -266,6 +280,7 @@ if(format(dt.f, "%m-%d %H:%M:%S") > "12-31 17:59:59") {
 		reanalysis2=reanalysis2[i], interpolate.space=interpolate.space[i], interpolate.time=interpolate.time[i],
 		keep.unpacking.info=keep.unpacking.info, return.units=return.units, interp=interp[i], p=p[i])
 	wx.out[i] <- temp.out$wx.out
+	spread[i] <- temp.out$spread
 	if(return.units == TRUE){
 		units[i] <- as.character(temp.out$units) }
 	next }
@@ -350,6 +365,13 @@ rec5 <- ifelse(outdata$V2[3] == missing.values, NA, outdata$V2[3] * scale.factor
 rec6 <- ifelse(outdata$V3[1] == missing.values, NA, outdata$V3[1] * scale.factor + add.offset)
 rec7 <- ifelse(outdata$V3[3] == missing.values, NA, outdata$V3[3] * scale.factor + add.offset)
 
+## Calculate the standard deviation around the values ##
+if(interpolate.space[i] == TRUE){
+	spread[i] <- ifelse(variable[i] %in% hindcast.variables, sd(c(rec1,rec3,rec5,rec7)), sd(c(rec0,rec2,rec4,rec6)))
+	} else {
+	spread[i] <- NA
+	}
+	
 ######################################
 ## Interpolate the weather variable ##
 if(interp[i] == 'IDW' | interp[i] == 'idw'){
@@ -383,11 +405,22 @@ rec6 <- c()
 rec7 <- c()
 outdata <- c()
 
+## Update the status bar ##
+	if(!is.null(pb)){
+		cval <- pb$getVal()
+		Sys.sleep(0.000001)
+		setTkProgressBar(pb, cval+1, label=paste(round((cval+1)/iterations*100, 0), "% done"))
+		}
+		
 }  ## END FOR LOOP ##
 
 #########################################
 ## Disconnect from the temporary files ##
 unlink(c(scale.offset.missingvals.temp, out.temp))
+
+##########################
+## Close the status bar ##
+if(!is.null(pb)) { if(pb$getVal() == iterations) {close(pb)} }
 
 #####################
 ## Print the units ##
@@ -400,6 +433,7 @@ if(return.units == TRUE){
 
 #############################
 ## Return the desired data ##
+attr(wx.out, "standard deviation") <- spread
 return(wx.out)
 
 }  ## END FUNCTION ##

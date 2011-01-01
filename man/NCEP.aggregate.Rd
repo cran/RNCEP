@@ -37,7 +37,7 @@ NCEP.aggregate(wx.data, YEARS = TRUE, MONTHS = TRUE, DAYS = TRUE,
   The names of the aggregated time components will be replaced with \code{"XX"} or \code{"XXXX"} in the output array.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{ M.U.Kemp@UvA.nl } }
 

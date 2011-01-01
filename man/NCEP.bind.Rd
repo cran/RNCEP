@@ -31,7 +31,7 @@ NCEP.bind(data.west, data.east)
   A 3-D array with the same latitude and datetime intervals and extent as \code{data.west} and \code{data.east}.  Row names (i.e. longitudes) for data from the west of the Prime Meridian are converted from positive to negative values.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 

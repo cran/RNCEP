@@ -13,7 +13,7 @@ NCEP.vis.area(wx.data, layer=1, show.pts=TRUE, draw.contours=TRUE,
 }
 
 \arguments{
-  \item{wx.data}{ A 3-D array of weather data as returned by \code{\link{NCEP.gather}} }
+  \item{wx.data}{ A 3-D array of weather data as returned by \code{\link{NCEP.gather}} or \code{\link{NCEP.aggregate}} }
   \item{layer}{ Either a numerical indication of the layer (default is the first layer) or a character expression of the datetime of a particular layer. }
   \item{show.pts}{ Logical.  Should the points at which data were obtained be plotted? }
   \item{draw.contours}{ Logical.  Should the map include contour lines? }
@@ -49,7 +49,7 @@ See the examples below for a demonstration of how to apply these different argum
 
 \value{ A plot is produced.  No data are returned. }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Ecography submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 

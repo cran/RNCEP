@@ -99,7 +99,7 @@ possible.variables <- c('air.2m','icec.sfc','pevpr.sfc','pres.sfc','runof.sfc','
 				'nswrs.sfc','prate.sfc','shtfl.sfc','uflx.sfc','ugwd.sfc','ulwrf.sfc','ulwrf.ntat','uswrf.sfc','uswrf.ntat','vbdsf.sfc','vddsf.sfc','vflx.sfc',
 				'vgwd.sfc','csulf.ntat','csusf.ntat','dswrf.ntat','pres.hcb','pres.hct','pres.lcb','pres.lct','pres.mcb','pres.mct',
 				'tcdc.eatm','ulwrf.ntat','uswrf.ntat')
-
+hindcast.variables <- c('tmax.2m','tmin.2m')
 
 
 ######################################################
@@ -127,6 +127,7 @@ out.temp.east.year2 <- tempfile()
 ## Create the output variable to store output data ##
 wx.out <- c()
 units <- c()
+spread <- c()
 
 ##################################################################
 ## Create a function to linearly interpolate between two points ##
@@ -226,8 +227,7 @@ year2 <- as.numeric(format(dt.f, "%Y")) + ifelse(two.years == TRUE, 1, 0)
 idatetime <-  floor(as.numeric(as.POSIXct(dt[i], tz='UTC')) / tgridsize)
 ts0 <- idatetime * tgridsize
 ts1 <- ts0 + tgridsize 
-f0ts <- (as.numeric(as.POSIXct(dt[i], tz='UTC')) - ts0) / tgridsize
-f0ts <- ifelse(interpolate.time[i] == FALSE, round(f0ts, digits=0), f0ts)
+f0ts <- ifelse(variable[i] %in% hindcast.variables, 1, 0)
 } else
 
 if(interp[i] == 'linear'){
@@ -256,8 +256,7 @@ year2 <- as.numeric(format(dt.f, "%Y")) + ifelse(two.years == TRUE, 1, 0)
 idatetime <-  floor(as.numeric(as.POSIXct(dt[i], tz='UTC')) / tgridsize)
 ts0 <- idatetime * tgridsize
 ts1 <- ts0 + tgridsize 
-f0ts <- (as.numeric(as.POSIXct(dt[i], tz='UTC')) - ts0) / tgridsize
-f0ts <- ifelse(interpolate.time[i] == FALSE, round(f0ts, digits=0), f0ts)
+f0ts <- ifelse(variable[i] %in% hindcast.variables, 1, 0)
 } else stop("'interp' must be either 'linear' or 'IDW'")
 
 ########################################################
@@ -365,6 +364,13 @@ rec5 <- ifelse(outdata.west.year2$V2[1] == missing.values, NA, outdata.west.year
 rec6 <- ifelse(outdata.east.year1$V2[1] == missing.values, NA, outdata.east.year1$V2[1] * scale.factor + add.offset)
 rec7 <- ifelse(outdata.east.year2$V2[1] == missing.values, NA, outdata.east.year2$V2[1] * scale.factor + add.offset)
 
+## Calculate the standard deviation around the values ##
+if(interpolate.space[i] == TRUE){
+	spread[i] <- ifelse(variable[i] %in% hindcast.variables, sd(c(rec1,rec3,rec5,rec7)), sd(c(rec0,rec2,rec4,rec6)))
+	} else {
+	spread[i] <- NA
+	}
+
 ######################################
 ## Interpolate the weather variable ##
 if(interp[i] == 'IDW' | interp[i] == 'idw'){
@@ -409,7 +415,7 @@ unlink(c(out.temp.west.year1, out.temp.west.year2, out.temp.east.year1, out.temp
 
 #############################
 ## Return the desired data ##
-return(data.frame(wx.out, units))
+return(data.frame(wx.out, units, spread))
 
 }  ## END FUNCTION ##
 

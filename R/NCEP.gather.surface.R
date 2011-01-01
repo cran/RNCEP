@@ -1,6 +1,6 @@
 NCEP.gather.surface <-
 function(variable, months.minmax, years.minmax, lat.minmax,
-	lon.minmax,  reanalysis2=FALSE, return.units=TRUE) {
+	lon.minmax,  reanalysis2=FALSE, return.units=TRUE, increments=NULL, pb=NULL) {
 
 
 ## Latitude and longitude should be given in decimal degrees ##
@@ -123,7 +123,6 @@ hour.names <- sprintf("%02d", rep(seq(0,18, length.out=4), length(day.names)/4))
 time.names <- paste(year.names, month.names, day.names, hour.names, sep='_')
 
 
-
 ###########################################
 ## Create an empty matrix using the dimensions of the x.coord and y.coord variables to store the output data ##
 out.wx.data <- array(data=NA, dim=c(length(seq(lat.minmax[1],lat.minmax[2], by=2.5)), length(seq(lon.minmax[1],lon.minmax[2], by=2.5)), length(time.names)), 
@@ -222,6 +221,13 @@ t.out[t.out == missing.values * scale.factor + add.offset] <- NA
 out.wx.data[1:rows,1:actual.columns,obs[i]] <- as.matrix(t.out)
 }
 
+## Update the status bar ##
+if(!is.null(pb)){
+cval <- pb$getVal()
+Sys.sleep(0.000001)
+setTkProgressBar(pb, cval+1, label=paste(round((cval+1)/increments*100, 0), "% done"))
+}
+
 loop.num <- loop.num + 1
 unlink(c(out.temp,scale.offset.missingvals.temp))
 }
@@ -233,6 +239,7 @@ if(return.units == TRUE){
 	}
 
 ###################
+if(!is.null(pb)) { if(pb$getVal() == increments) {close(pb)} }
 return(out.wx.data)
 }
 

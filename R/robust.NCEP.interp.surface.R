@@ -75,6 +75,7 @@ out.temp.east.year2 <- tempfile()
 ## Create the output variable to store output data ##
 wx.out <- c()
 units <- c()
+spread <- c()
 
 ##################################################################
 ## Create a function to linearly interpolate between two points ##
@@ -330,6 +331,24 @@ rec0 <- MK.interp(rec0, rec2, f0lon)
 rec1 <- MK.interp(rec1, rec3, f0lon)
 ## Finally in time ##
 wx.out[i] <- MK.interp(rec0, rec1, f0ts)
+
+## Calculate the standard deviation of the values ##
+if(interpolate.space[i] == TRUE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(outdata.west.year1$V2[c(1,2)],outdata.west.year2$V2[c(1,2)],outdata.east.year1$V2[c(1,2)],outdata.east.year2$V2[c(1,2)]))
+		} else 
+	if(f0ts == 1){
+		spread[i] <- sd(c(outdata.west.year2$V2[c(1,2)],outdata.east.year2$V2[c(1,2)]))
+		} else
+		spread[i] <- sd(c(outdata.west.year1$V2[c(1,2)],outdata.east.year1$V2[c(1,2)]))
+	} else 
+if(interpolate.space[i] == FALSE){
+	if(interpolate.time[i] == TRUE){
+		spread[i] <- sd(c(rec0,rec1)) 
+	} else {
+		spread[i] <- NA
+		}
+}
 }
 
 #################################################
@@ -357,7 +376,7 @@ unlink(c(out.temp.west.year1, out.temp.west.year2, out.temp.east.year1, out.temp
 
 #############################
 ## Return the desired data ##
-return(data.frame(wx.out,units))
+return(data.frame(wx.out,units,spread))
 
 }  ## END FUNCTION ##
 
