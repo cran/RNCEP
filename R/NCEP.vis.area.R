@@ -15,7 +15,11 @@ if(is.numeric(layer) == FALSE){
 }
 
 ## Specify the values of longitude ##
-longitudes <- as.numeric(dimnames(wx.data)[[2]])
+if(mean(as.numeric(dimnames(wx.data)[[2]])) >= 180){
+    longitudes <- as.numeric(dimnames(wx.data)[[2]])-360 
+	} else {
+	longitudes <- as.numeric(dimnames(wx.data)[[2]])
+	}
 
 ## First create a map that spans the range of the data ##
 orig.map.args <- map.args
@@ -54,10 +58,10 @@ do.call('abline', c(grid.args, if(is.null(grid.args$h)) {list(h=axs2)}, if(is.nu
 
 ## Add a title to the figure ##
 if(is.null(title.args)){
-	title.args <- list(main=dimnames(wx.data)[[3]][layer], xlab="Longitudes", ylab="Latitudes", cex.lab=1.25) } else {
+	title.args <- list(main=dimnames(wx.data)[[3]][layer], xlab="Longitude", ylab="Latitude", cex.lab=1.25) } else {
 	title.args <- c(title.args, if(is.null(title.args$main)) {list(main=dimnames(wx.data)[[3]][layer])},
-			if(is.null(title.args$xlab)) {list(xlab="Longitudes")},
-			if(is.null(title.args$ylab)) {list(ylab="Latitudes")},
+			if(is.null(title.args$xlab)) {list(xlab="Longitude")},
+			if(is.null(title.args$ylab)) {list(ylab="Latitude")},
 			if(is.null(title.args$cex.lab)) {list(cex.lab=1.25)}) }
 do.call('title', title.args)
 
@@ -115,10 +119,10 @@ rect(xleft=par()$usr[1], ybottom=par()$usr[3], xright=par()$usr[2], ytop=par()$u
 ## If desired, add points to indicate grid points in the dataset ##
 if(show.pts==TRUE) {
 if(is.null(points.args)){
-	points.args <- list(x=rep(as.numeric(dimnames(wx.data)[[2]]), length(dimnames(wx.data)[[1]])), 
+	points.args <- list(x=rep(longitudes, length(dimnames(wx.data)[[1]])), 
 			y=rep(as.numeric(dimnames(wx.data)[[1]]), each=length(dimnames(wx.data)[[2]]))) } else {
 	points.args <- c(points.args,
-			if(is.null(points.args$x)) {list(x=rep(as.numeric(dimnames(wx.data)[[2]]), length(dimnames(wx.data)[[1]])))},
+			if(is.null(points.args$x)) {list(x=rep(longitudes, length(dimnames(wx.data)[[1]])))},
 			if(is.null(points.args$y)) {list(y=rep(as.numeric(dimnames(wx.data)[[1]]), each=length(dimnames(wx.data)[[2]])))}) }
 do.call('points', points.args)
 }			

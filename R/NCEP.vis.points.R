@@ -12,7 +12,31 @@ lon.lim <- c(min(range(lons, na.rm=TRUE), na.rm=TRUE) - (diff(range(lons, na.rm=
 	max(range(lons, na.rm=TRUE), na.rm=TRUE) + (diff(range(lons, na.rm=TRUE), na.rm=TRUE)*.1))
 lat.lim <- c(min(range(lats, na.rm=TRUE), na.rm=TRUE) - (diff(range(lats, na.rm=TRUE), na.rm=TRUE)*.1), 
 	max(range(lats, na.rm=TRUE), na.rm=TRUE) + (diff(range(lats, na.rm=TRUE), na.rm=TRUE)*.1))
+## Determine their spatial range
+rlon <- diff(lon.lim)
+rlat <- diff(lat.lim)	
+## If the difference between lats or longs is zero, add some space ##
+if(rlat == 0){
+	if(rlon == 0){
+		lat.lim <- c(lat.lim[1] - 5, lat.lim[2] + 5)
+		} else {
+	lat.lim <- c(lat.lim[1] - abs(rlon/2), lat.lim[2] + abs(rlon/2))
+		}
+}
+if(rlon == 0){
+	lon.lim <- c(lon.lim[1] - abs(rlat/2), lon.lim[2] + abs(rlat/2))
+	}
 
+## Make sure that the longitudes are specified correctly ##
+if(mean(lon.lim) >= 180){
+    lon.lim <- lon.lim-360
+	lons <- lons-360
+	}
+if(mean(lon.lim) <= -180){
+	lon.lim <- lon.lim+360
+	lons <- lons+360
+	}
+	
 ## Specify the full range of colors to be considered ##
 all.cols <- cols
 	

@@ -12,13 +12,13 @@ citEntry(entry="Article",
 			as.person("Judy Shamoun-Baranes"),
 			as.person("Willem Bouten")),
 		journal = "Ecography",
-		volume = "submitted",
+		volume = "In press",
 		year = year,
 		note = vers,
 		textVersion = paste("Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,",
                     "and Bouten, W. (",
                     year,
-                    "). RNCEP: global weather and climate data at your fingertips. Methods in Ecology and Evolution, submitted, ",
+                    "). RNCEP: global weather and climate data at your fingertips. Methods in Ecology and Evolution, Early View, ",
                     vers, ".", sep=""))
 
 

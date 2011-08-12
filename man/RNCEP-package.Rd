@@ -27,8 +27,8 @@ This package contains functions to...
 \tabular{ll}{
 Package: \tab RNCEP\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
-Date: \tab 2011-01-01\cr
+Version: \tab 1.0.3\cr
+Date: \tab 2011-08-12\cr
 License: \tab GPL (>=2) \cr
 LazyLoad: \tab yes\cr
 }
@@ -40,7 +40,7 @@ LazyLoad: \tab yes\cr
 
   Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,and Bouten, W.
   (2011). RNCEP: global weather and climate data at your fingertips.
-  Methods in Ecology and Evolution, submitted.
+  Methods in Ecology and Evolution, DOI: 10.1111/j.2041-210X.2011.00138.x.
 
 \bold{To cite the NCEP/NCAR Reanalysis dataset use:}
 
