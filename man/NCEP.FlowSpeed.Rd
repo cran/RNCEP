@@ -35,7 +35,7 @@ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:gl
 
 Kemp, M.U., Shamoun-Baranes, J., van Loon, E. E., and Bouten, W. 2012. Quantifying flow-assistance and implications for movement research. -- Journal of Theoretical Biology. In prep.}
 
-\author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
+\author{ Michael U. Kemp \email{mukemp+RNCEP@gmail.com} }
 
 \examples{
 library(RNCEP)

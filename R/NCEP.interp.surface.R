@@ -38,7 +38,7 @@ reanalysis2 <- rep(reanalysis2, length.out=iterations)
 interpolate.space <- rep(interpolate.space, length.out=iterations)
 interpolate.time <- rep(interpolate.time, length.out=iterations)
 interp <- rep(interp, length.out=iterations)
-p <- rep(p, length.out=p)
+p <- rep(p, length.out=iterations)
 
 ## If spatial interpolation is turned off (i.e. nearest neighbor interpolation), make sure that the method of interpolation is 'IDW' ##
 interp <- ifelse(!interpolate.space, 'IDW', interp)

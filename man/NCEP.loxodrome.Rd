@@ -28,7 +28,7 @@ NCEP.loxodrome(lat1,lat2,lon1,lon2)
 
 \references{ \url{http://en.wikipedia.org/wiki/Rhumb_line} }
 
-\author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
+\author{ Michael U. Kemp \email{mukemp+RNCEP@gmail.com} }
 
 \examples{
 library(RNCEP)

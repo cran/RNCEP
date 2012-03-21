@@ -251,7 +251,7 @@ including text such as, \dQuote{NCEP Reanalysis data provided by the
 NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at
 \url{http://www.esrl.noaa.gov/psd/}}. They would also appreciate a copy of any publications using NCEP data.}
 
-\author{Michael U. Kemp \email{M.U.Kemp@UvA.nl}}
+\author{Michael U. Kemp \email{mukemp+RNCEP@gmail.com}}
 
 
 \examples{

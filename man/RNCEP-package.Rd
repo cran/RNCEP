@@ -30,14 +30,14 @@ This package contains functions to...
 \tabular{ll}{
 Package: \tab RNCEP\cr
 Type: \tab Package\cr
-Version: \tab 1.0.5\cr
-Date: \tab 2012-08-14\cr
+Version: \tab 1.0.6\cr
+Date: \tab 2012-03-21\cr
 License: \tab GPL (>=2) \cr
 LazyLoad: \tab yes\cr
 }
 }
 
-\author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
+\author{ Michael U. Kemp \email{mukemp+RNCEP@gmail.com} }
 
 \references{ \bold{To cite package 'RNCEP' in publications use:}
 

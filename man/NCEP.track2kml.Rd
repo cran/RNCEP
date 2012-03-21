@@ -52,7 +52,7 @@ NCEP.track2kml(latitude, longitude, datetime, altitude=NULL,
 
 Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
-\author{ Michael U. Kemp <\email{M.U.Kemp@UvA.nl}> }
+\author{ Michael U. Kemp <\email{mukemp+RNCEP@gmail.com}> }
 \seealso{ \code{\link{NCEP.flight}} }
 \examples{
 \dontrun{
