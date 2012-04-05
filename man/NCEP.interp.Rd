@@ -233,7 +233,7 @@ Optionally, the units of the variable being queried are printed when the functio
 
   Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,and Bouten, W.
   (2011). RNCEP: global weather and climate data at your fingertips.
-  Methods in Ecology and Evolution, submitted.
+  Methods in Ecology and Evolution, DOI:10.1111/j.2041-210X.2011.00138.x.
 
 \bold{To cite the NCEP/NCAR Reanalysis dataset use:}
 
@@ -255,6 +255,7 @@ NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at
 
 
 \examples{
+\dontrun{
 library(RNCEP)
 ###############################################################
 ###############################################################
@@ -355,4 +356,5 @@ NCEP.vis.points(wx=tailwind, lats=ss$latitude, lons=ss$longitude,
     image.plot.args=list(legend.args=list(text='Tailwind m/s',
     adj=0, padj=-2, cex=1.15)),
     map.args=list(xlim=c(-7,4), ylim=c(40,50)))
+}
 }

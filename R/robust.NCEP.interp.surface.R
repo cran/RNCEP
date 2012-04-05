@@ -344,7 +344,7 @@ if(interpolate.space[i] == TRUE){
 	} else 
 if(interpolate.space[i] == FALSE){
 	if(interpolate.time[i] == TRUE){
-		spread[i] <- sd(c(rec0,rec1)) 
+		spread[i] <- sd(c(t1,t2)) 
 	} else {
 		spread[i] <- NA
 		}

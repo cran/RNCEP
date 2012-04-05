@@ -37,11 +37,12 @@ NCEP.aggregate(wx.data, YEARS = TRUE, MONTHS = TRUE, DAYS = TRUE,
   The names of the aggregated time components will be replaced with \code{"XX"} or \code{"XXXX"} in the output array.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
 \author{ Michael U. Kemp \email{ M.U.Kemp@UvA.nl } }
 
 \examples{
+\dontrun{
 library(RNCEP)
 ######################################################
 ## In the first example, we use the internal R function
@@ -131,10 +132,11 @@ gridded(wx.df) <- TRUE
 proj4string(wx.df) <- CRS('+proj=longlat + datum=WGS84')
 
 ## Save the data in .asc format
-\dontrun{write.asciigrid(wx.df, fname='wx.asc')}
+write.asciigrid(wx.df, fname='wx.asc')
 ## Note: Data will be written to your working directory ##
 
 ## The resulting .asc file can be imported into ArcMap
 ## using ArcMap's "ASCII to Raster" tool in the "Conversion Tools"
 ## section of the ArcToolbox. ##
+}
 }

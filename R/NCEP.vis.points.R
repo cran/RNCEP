@@ -15,17 +15,15 @@ lat.lim <- c(min(range(lats, na.rm=TRUE), na.rm=TRUE) - (diff(range(lats, na.rm=
 ## Determine their spatial range
 rlon <- diff(lon.lim)
 rlat <- diff(lat.lim)	
-## If the difference between lats or longs is zero, add some space ##
-if(rlat == 0){
-	if(rlon == 0){
-		lat.lim <- c(lat.lim[1] - 5, lat.lim[2] + 5)
-		} else {
-	lat.lim <- c(lat.lim[1] - abs(rlon/2), lat.lim[2] + abs(rlon/2))
+## Make sure that the range of lats and longs is large enough ##
+	if(rlon < (rlat*.6)){
+		xtra <- diff(c(rlon, (rlat*.6)))/2
+		lon.lim <- c(lon.lim[1] - xtra, lon.lim[2] + xtra)
 		}
-}
-if(rlon == 0){
-	lon.lim <- c(lon.lim[1] - abs(rlat/2), lon.lim[2] + abs(rlat/2))
-	}
+	if(rlat < (rlon*.6)){
+		xtra <- diff(c(rlat, (rlon*.6)))/2
+		lat.lim <- c(lat.lim[1] - xtra, lat.lim[2] + xtra)
+		}
 
 ## Make sure that the longitudes are specified correctly ##
 if(mean(lon.lim) >= 180){

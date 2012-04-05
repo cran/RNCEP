@@ -1,10 +1,12 @@
 \name{NCEP.gather}
 
 \alias{NCEP.gather}
-\alias{gather}
 \alias{NCEP.gather.gaussian}
 \alias{NCEP.gather.pressure}
 \alias{NCEP.gather.surface}
+\alias{robust.NCEP.gather.gaussian}
+\alias{robust.NCEP.gather.pressure}
+\alias{robust.NCEP.gather.surface}
 
 \title{Queries Weather Data }
 
@@ -202,7 +204,7 @@ NCEP.gather.surface(variable, months.minmax, years.minmax,
 
   Kemp, M.U., van Loon, E.E., Shamoun-Baranes, J.,and Bouten, W.
   (2011). RNCEP: global weather and climate data at your fingertips.
-  Methods in Ecology and Evolution, submitted.
+  Methods in Ecology and Evolution, DOI:10.1111/j.2041-210X.2011.00138.x.
 
 \bold{To cite the NCEP/NCAR Reanalysis dataset use:}
 
@@ -224,6 +226,7 @@ NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their Web site at
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
 \examples{
+\dontrun{
 library(RNCEP)
 ## Query the temperature from a particular pressure level ##
 wx.extent1 <- NCEP.gather(variable='air', level=850,
@@ -264,9 +267,9 @@ dimnames(wx.extent1)[[3]] ## datetimes
 #########################################################
 #########################################################
 ## The data array may be saved directly as an R object ##
-\dontrun{save(wx.extent, file='wx_extent.Rdata')}
+save(wx.extent, file='wx_extent.Rdata')
 ## And then later recalled ##
-\dontrun{load(file='wx_extent.Rdata')}
+load(file='wx_extent.Rdata')
 
 
 ################################################################
@@ -304,7 +307,7 @@ for(i in 2:length(dimnames(wx.extent1)[[3]])){
 ras1 <- raster(ras, layer=1)
 
 ## Then write the data from that layer to a .bil file ##
-\dontrun{writeRaster(ras, filename='ras_example.bil', format="EHdr")}
+writeRaster(ras, filename='ras_example.bil', format="EHdr")
 ## The file will be saved in your current working directory ##
 
 ## The resulting file can be imported into ArcGIS ##
@@ -400,7 +403,7 @@ gridded(wx.df) <- TRUE
 proj4string(wx.df) <- CRS('+proj=longlat + datum=WGS84')
 
 ## Save the data in .asc format
-\dontrun{write.asciigrid(wx.df, fname='wx.asc')}
+write.asciigrid(wx.df, fname='wx.asc')
 ## Note: Data will be written to your working directory ##
 
 ## The resulting .asc file can be imported into ArcMap
@@ -413,5 +416,5 @@ proj4string(wx.df) <- CRS('+proj=longlat + datum=WGS84')
 ## Also see the RSAGA package for GIS functionality in R
 ## One could even write the data array back to NetCDF 
 ## (see packages RNetCDF and ncdf)
-
+}
 }

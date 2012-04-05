@@ -29,11 +29,12 @@ NCEP.array2df(wx.data, var.names=NULL)
   A data frame with the components of latitudes, longitude, datetime, and the weather variable(s) from the input data array(s).
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
 \examples{
+\dontrun{
 library(RNCEP)
 ############################################################
 ############################################################
@@ -71,5 +72,5 @@ wx.vwnd <- NCEP.gather(variable='vwnd', level=850,
 ## Then convert the two 3-D arrays to a single data.frame ##
 wx.df <- NCEP.array2df(wx.data=list(wx.uwnd, wx.vwnd), 
     var.names=c('Uwind', 'Vwind'))
-
+}
 }

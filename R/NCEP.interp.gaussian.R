@@ -424,8 +424,8 @@ if(!is.null(pb)) { if(pb$getVal() == iterations) {close(pb)} }
 
 #####################
 ## Print the units ##
-units <- units[is.na(units)==FALSE]
 if(return.units == TRUE){
+units <- units[is.na(units)==FALSE]
 	for(x in 1:length(unique(units))){
 		print(noquote(paste("Units of variable '", unique(variable)[x], "' are ", unique(units)[x], sep='')))
 	}

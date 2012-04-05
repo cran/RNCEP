@@ -39,11 +39,14 @@ See the examples below for a demonstration of how to apply these different argum
 
 \value{ A plot is produced.  No data are returned. }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
+\references{ \bold{To cite package 'RNCEP' in publications use:}
+
+Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
 \examples{
+\dontrun{
 library(RNCEP)
 ## In this example, we use datetime and locational data
 ## obtained from a GPS device attached to a lesser 
@@ -124,4 +127,5 @@ NCEP.vis.points(wx=tailwind, lats=ss$latitude, lons=ss$longitude,
     image.plot.args=list(legend.args=list(text='Tailwind m/s',
         adj=0, padj=-2, cex=1.15)),
     map.args=list(xlim=c(-7,4), ylim=c(40,50)))
+}
 }

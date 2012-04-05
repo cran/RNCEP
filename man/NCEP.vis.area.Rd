@@ -49,11 +49,14 @@ See the examples below for a demonstration of how to apply these different argum
 
 \value{ A plot is produced.  No data are returned. }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
+\references{ \bold{To cite package 'RNCEP' in publications use:}
+
+Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl} }
 
 \examples{
+\dontrun{
 library(RNCEP)
 ## Retrieve data for a specified spatial and temporal extent ##
 wx.extent <- NCEP.gather(variable = "air", level=850,
@@ -124,4 +127,5 @@ NCEP.vis.area(wx=wx.ag, layer="XXXX-XX-XX 18", interp.loess.args=list(span=0.5),
     title.args=list(main='Example: aggregated layer', xlab='Long [degrees]',
     ylab='Lat [degrees]'), points.args=list(pch=19),
     contour.args=list(labcex=.6))
+}
 }

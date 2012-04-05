@@ -35,11 +35,12 @@ NCEP.restrict(wx.data, years2remove = NULL, months2remove = NULL,
   This function returns a three dimensional array (or a 2-D matrix if all but a single timestep is removed) of weather data.  The three dimensions are latitude, longitude, and datetime reflected in the dimnames of the output array.
 }
 
-\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution submitted. }
+\references{ Kemp, M. U., van Loon, E. E., Shamoun-Baranes, J., and Bouten, W. 2011. RNCEP:global weather and climate data at your fingertips. -- Methods in Ecology and Evolution. DOI:10.1111/j.2041-210X.2011.00138.x. }
 
 \author{ Michael U. Kemp \email{M.U.Kemp@UvA.nl}}
 
 \examples{
+\dontrun{
 library(RNCEP)
 ## First query the U component of the wind from the 850mb
 ## pressure level
@@ -55,4 +56,5 @@ uwnd.r <- NCEP.restrict(wx.data=uwnd, hours2remove=c(6,12,18),
 ## Then remove the observation from 1 May 2000 at midnight ##
 uwnd.r2 <- NCEP.restrict(wx.data=uwnd.r,
     other2remove="2000-05-01 00", set2na=FALSE)
+}
 }
