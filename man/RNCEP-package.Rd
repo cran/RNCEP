@@ -30,8 +30,8 @@ This package contains functions to...
 \tabular{ll}{
 Package: \tab RNCEP\cr
 Type: \tab Package\cr
-Version: \tab 1.0.4\cr
-Date: \tab 2012-04-05\cr
+Version: \tab 1.0.5\cr
+Date: \tab 2012-08-14\cr
 License: \tab GPL (>=2) \cr
 LazyLoad: \tab yes\cr
 }
@@ -41,11 +41,11 @@ LazyLoad: \tab yes\cr
 
 \references{ \bold{To cite package 'RNCEP' in publications use:}
 
-Kemp, M. U., Emiel van Loon, E., Shamoun-Baranes, J., Bouten, W., 2012. RNCEP: global weather and climate data at your fingertips. Methods in Ecology and Evolution (3), 65-70., DOI: 10.1111/j.2041-210X.2011.00138.x.
+Kemp, M. U., Emiel van Loon, E., Shamoun-Baranes, J., Bouten, W., 2012. RNCEP: global weather and climate data at your fingertips. Methods in Ecology and Evolution (3), 65-70., DOI: 10.1111/j.2041-210X.2011.00138.x
   
 \bold{For more information on flow-assistance and NCEP.flight see:}
 
-Kemp, M.U., Shamoun-Baranes, J., van Loon, E. E., and Bouten, W. 2012. Quantifying flow-assistance and implications for movement research. -- Journal of Theoretical Biology. In prep.
+Kemp, M.U., Shamoun-Baranes, J., van Loon, E. E., McLaren, J. D., Dokter, A. M., and Bouten, W. 2012. Quantifying flow-assistance and implications for movement research. Journal of Theoretical Biology. (308), 56-67. DOI 10.1016/j.jtbi.2012.05.026
 
 \bold{To cite the NCEP/NCAR Reanalysis dataset use:}
 

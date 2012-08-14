@@ -26,7 +26,7 @@ for(p in levels2consider){
 lat <- beg.loc[1]
 lon <- beg.loc[2]
 dt <- begin.dt
-dist2goal <- deg.dist(lat1=lat, long1=lon, lat2=end.loc[1], long2=end.loc[2])
+dist2goal <- deg.dist(long1=lon, lat1=lat, long2=end.loc[2], lat2=end.loc[1])
 fa <- c()
 best <- c()
 angle <- c()
@@ -56,7 +56,7 @@ if(calibrate.dir == TRUE | loop == 1){
 		angle[loop] <- NCEP.loxodrome(lat1=lat[loop],lat2=end.loc[1],lon1=lon[loop],lon2=end.loc[2])
 		} else
 	if(path == 'great.circle' | path == 'NCEP.great.circle'){
-		angle[loop] <- earth.bear(lat1=lat[loop], long1=lon[loop], lat2=end.loc[1], long2=end.loc[2])
+		angle[loop] <- earth.bear(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
 		} else 
 	if(is.numeric(path)){
 		angle[loop] <- path 
@@ -180,7 +180,7 @@ new.distance <- sqrt(move.side^2+move.forward^2)
 latlon <- matrix(NA, ncol=2, nrow=evaluation.interval+1)
 latlon[1,] <- c(lat[loop],lon[loop])
 for(i in 2:length(latlon[,1])){
-	latlon[i,] <- new.lat.long(lat=latlon[i-1,1], long=latlon[i-1,2], bearing=new.bearing, distance=new.distance/1000)
+	latlon[i,] <- new.lat.long(long=latlon[i-1,2], lat=latlon[i-1,1], bearing=new.bearing, distance=new.distance/1000)
 	}
 new.loc <- latlon[i,]
 
@@ -192,7 +192,7 @@ between.latlon <- cbind(is.between(latlon[,1], beg.loc[1], end.loc[1]), is.betwe
 ###################################################################################
 ## See if the bird has passed through the goal area between evaluation intervals ##
 if(any(lapply(when2stop, FUN=is.numeric) == TRUE)){
-outside.of.area <- deg.dist(lat1=latlon[,1], long1=latlon[,2], lat2=end.loc[1], long2=end.loc[2]) > when2stop[[which(lapply(when2stop, FUN=is.numeric) == TRUE)]]
+outside.of.area <- deg.dist(long1=latlon[,2], lat1=latlon[,1], long2=end.loc[2], lat2=end.loc[1]) > when2stop[[which(lapply(when2stop, FUN=is.numeric) == TRUE)]]
 }
 
 ############################################################################
@@ -242,7 +242,7 @@ lon[loop] <- new.loc[2]
 
 ##################################################
 ## Assign the new distance to the end goal (km) ##
-dist2goal[loop] <- deg.dist(lat1=lat[loop], long1=lon[loop], lat2=end.loc[1], long2=end.loc[2])
+dist2goal[loop] <- deg.dist(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
 
 ##
 ######################################

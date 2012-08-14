@@ -162,10 +162,10 @@ ilon0 <- floor(lon[i] * 100 / gridsize) * gridsize
 ilon1 <- ilon0 + gridsize
 
 ## Calculate the distance of each gridpoint from the desired location on a great circle ##
-lat0.lon0.d <- deg.dist(ilon0/100, ilat0/100, lon[i], lat[i])^p[i]
-lat0.lon1.d <- deg.dist(ilon1/100, ilat0/100, lon[i], lat[i])^p[i]
-lat1.lon0.d <- deg.dist(ilon0/100, ilat1/100, lon[i], lat[i])^p[i]
-lat1.lon1.d <- deg.dist(ilon1/100, ilat1/100, lon[i], lat[i])^p[i]
+lat0.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat0.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
 
 ## Make sure that the interpolated point doesn't fall on an existing grid point ##
 if(any(c(lat0.lon0.d, lat0.lon1.d, lat1.lon0.d, lat1.lon1.d) == 0)){
@@ -223,7 +223,7 @@ dt.f <- strptime(dt[i], "%Y-%m-%d %H:%M:%S",'UTC')
 year <- as.numeric(format(dt.f, "%Y"))
 idatetime <-  floor(as.numeric(as.POSIXct(dt[i], tz='UTC')) / tgridsize)
 ts0 <- idatetime * tgridsize
-ts1 <- ts0 + tgridsize 
+ts1 <- ts0 + tgridsize
 f0ts <- (as.numeric(as.POSIXct(dt[i], tz='UTC')) - ts0) / tgridsize
 f0ts <- ifelse(interpolate.time[i] == FALSE, round(f0ts, digits=0), f0ts)
 } else stop("'interp' must be either 'IDW' or 'linear'")

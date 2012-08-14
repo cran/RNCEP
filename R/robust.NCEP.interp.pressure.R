@@ -124,10 +124,10 @@ ilon0 <- floor(lon[i] * 100 / gridsize) * gridsize
 ilon1 <- ilon0 + gridsize
 
 ## Calculate the distance of each gridpoint from the desired location on a great circle ##
-lat0.lon0.d <- deg.dist(ilon0/100, ilat0/100, lon[i], lat[i])^p[i]
-lat0.lon1.d <- deg.dist(ilon1/100, ilat0/100, lon[i], lat[i])^p[i]
-lat1.lon0.d <- deg.dist(ilon0/100, ilat1/100, lon[i], lat[i])^p[i]
-lat1.lon1.d <- deg.dist(ilon1/100, ilat1/100, lon[i], lat[i])^p[i]
+lat0.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat0.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
 
 ## Make sure that the interpolated point doesn't fall on an existing grid point ##
 if(any(c(lat0.lon0.d, lat0.lon1.d, lat1.lon0.d, lat1.lon1.d) == 0)){

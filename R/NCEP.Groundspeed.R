@@ -13,7 +13,7 @@ NCEP.Groundspeed <- function(u, v, direction, groundspeed,...){
 	tailwind <- wspd*(cos(theta*deg2rad))
 	sidewind <- wspd*(sin(theta*deg2rad))
 	side.move <- 0
-	forward.move <- 12
+	forward.move <- groundspeed
 	
 	## Calculate the bird's airspeed and groundspeed ##
 	airspeed <- (sqrt(groundspeed^2 + wspd^2 - 2 * groundspeed * wspd * (cos(theta * deg2rad))))
