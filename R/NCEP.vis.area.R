@@ -2,7 +2,11 @@ NCEP.vis.area <- function(wx.data, layer=1, show.pts=TRUE, draw.contours=TRUE, c
 	map.args=NULL, grid.args=NULL, title.args=NULL, interp.loess.args=NULL, image.plot.args=NULL, contour.args=NULL, points.args=NULL){
 
 ## Load the needed libraries ##
-require(maps);require(fields);require(tgp)
+#importFrom(maps,map)
+#importFrom(fields,image.plot)
+#importFrom(tgp,interp.loess)
+#importFrom(graphics,contour)
+#require(maps);require(fields);require(tgp)
 
 ## Make sure the weather data are in an array and not just a matrix ##
 if (length(dimnames(wx.data)) == 2) { wx.data <- array(wx.data,dim=c(dim(wx.data),1), dimnames=c(dimnames(wx.data),1)) }

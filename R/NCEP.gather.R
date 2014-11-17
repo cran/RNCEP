@@ -26,7 +26,9 @@ lon.westeast[length(lon.westeast)] <- ifelse(lon.westeast[length(lon.westeast)] 
 if(lon.westeast[1] > lon.westeast[length(lon.westeast)]) { cross.prime <- TRUE } else { cross.prime <- FALSE }
 
 ## If a status bar is desired, describe the status bar parameters ##
-if(status.bar){require(tcltk)
+if(status.bar){
+	#importFrom(tcltk,tkProgressBar)
+	#require(tcltk)
 if(cross.prime){
 	tlength <- length(seq(years.minmax[1],years.minmax[length(years.minmax)]))*2
 	pb <- tkProgressBar(title="Total progress", min = 0,

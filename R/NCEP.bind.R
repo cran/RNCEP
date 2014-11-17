@@ -1,9 +1,6 @@
 NCEP.bind <-
 function(data.west, data.east){
 
-## Load the necessary library ##
-library(abind)
-
 ## Bind the U and V arrays separately ##
 whole.data <- abind(data.west, data.east, along=2)
 

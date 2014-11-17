@@ -1,7 +1,8 @@
 NCEP.track2kml <- function(latitude, longitude, datetime, altitude=NULL, col.variable=NULL, col.scheme=NULL, point.alpha=255, line.color='goldenrod', line.alpha=255, size.variable=NULL, point.names=NULL, data.variables=NULL, output.filename='track', descriptive.filename=NULL){
 
 ## Install the necessary libraries ##
-require(RColorBrewer)
+#importFrom(RColorBrewer,brewer.pal)
+#require(RColorBrewer)
 
 ## If NULL, give the descriptive filename the same as the output filename ##
 if(is.null(descriptive.filename)){
@@ -30,7 +31,6 @@ if(!is.null(col.variable) & col.scheme %in% row.names(RColorBrewer::brewer.pal.i
 	} else
 ##
 if(!is.null(col.variable) & col.scheme[1] %in% c('rainbow','heat.colors','terrain.colors','topo.colors','cm.colors','bpy.colors')){
-	if(col.scheme == 'bpy.colors'){require(sp)}
 	colors <- strsplit(eval(parse(text=paste(col.scheme,'(ifelse(length(latitude) < 1000, length(latitude), 1000), alpha=point.alpha/255)',sep=''))), split='')
 	ratio <- (max(col.variable, na.rm=TRUE) - min(col.variable, na.rm=TRUE))/length(colors)
 	brks <- round(seq(min(col.variable, na.rm=TRUE),max(col.variable, na.rm=TRUE),by=ratio),digits=0)

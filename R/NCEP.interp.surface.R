@@ -24,7 +24,9 @@ function(variable, lat, lon, dt, reanalysis2=FALSE,
 iterations <- max(c(length(variable),length(lat), length(lon), length(dt), length(reanalysis2), length(interpolate.space), length(interpolate.time), length(interp), length(p)))
 
 ## If a status bar is desired, describe the status bar parameters ##
-if(status.bar){require(tcltk)
+if(status.bar){
+	#importFrom(tcltk,tkProgressBar)
+	#require(tcltk)
 	pb <- tkProgressBar(title="Total progress", min = 0, max=iterations, width=300) 
 		} else { pb <- NULL }
 
@@ -151,7 +153,22 @@ if(lon[i] >= 357.5){
 	
 ###########################################
 if(interp[i] == 'IDW' | interp[i] == 'idw'){
-require(fossil)
+NCEP.deg.dist <- function (long1, lat1, long2, lat2) 
+{
+    rad <- pi/180
+    a1 <- lat1 * rad
+    a2 <- long1 * rad
+    b1 <- lat2 * rad
+    b2 <- long2 * rad
+    dlon <- b2 - a2
+    dlat <- b1 - a1
+    a <- (sin(dlat/2))^2 + cos(a1) * cos(b1) * (sin(dlon/2))^2
+    c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+    R <- 40041.47/(2 * pi)
+    d <- R * c
+    return(d)
+}
+
 ##############################################################################################
 ## Create some variables to detemine which points should be obtained and how to interpolate ##
 ## SPACE ##
@@ -162,10 +179,10 @@ ilon0 <- floor(lon[i] * 100 / gridsize) * gridsize
 ilon1 <- ilon0 + gridsize
 
 ## Calculate the distance of each gridpoint from the desired location on a great circle ##
-lat0.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
-lat0.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
-lat1.lon0.d <- deg.dist(long1=ilon0/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
-lat1.lon1.d <- deg.dist(long1=ilon1/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
+lat0.lon0.d <- NCEP.deg.dist(long1=ilon0/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat0.lon1.d <- NCEP.deg.dist(long1=ilon1/100, lat1=ilat0/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon0.d <- NCEP.deg.dist(long1=ilon0/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
+lat1.lon1.d <- NCEP.deg.dist(long1=ilon1/100, lat1=ilat1/100, long2=lon[i], lat2=lat[i])^p[i]
 
 ## Make sure that the interpolated point doesn't fall on an existing grid point ##
 if(any(c(lat0.lon0.d, lat0.lon1.d, lat1.lon0.d, lat1.lon1.d) == 0)){
@@ -278,14 +295,16 @@ if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database 
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year,".nc.das into a web browser to obtain an error message.", sep = ""))}
 }
 ##
-add.offset <- as.numeric(strsplit(strsplit(grep('add_offset', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'add_offset ')[[1]][2])
-scale.factor <- as.numeric(strsplit(strsplit(grep('scale_factor', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'scale_factor ')[[1]][2])
+add.offset <- if(reanalysis2[i] == TRUE){as.numeric(strsplit(strsplit(grep('add_offset', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'add_offset ')[[1]][2]) } else { 0 }
+scale.factor <- if(reanalysis2[i] == TRUE){as.numeric(strsplit(strsplit(grep('scale_factor', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'scale_factor ')[[1]][2]) } else { 1 }
 missing.values <- as.numeric(strsplit(strsplit(grep('missing_value', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'missing_value ')[[1]][2])
 if(return.units == TRUE){
-	all.units <- grep('String units', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE)
- 	units[i] <- strsplit(all.units[length(all.units)], "\"")[[1]][2]
+	var.loc.units <- min(grep(name, x = readLines(scale.offset.missingvals.temp), value = FALSE, fixed = TRUE))
+	all.loc.units <- grep("String units", x = readLines(scale.offset.missingvals.temp), value = FALSE, fixed = TRUE)
+	all.units <- grep("String units", x = readLines(scale.offset.missingvals.temp), value = TRUE, fixed = TRUE)
+	units[i] <- strsplit(all.units[which(all.loc.units > var.loc.units)[1]], "\"")[[1]][2]
 }
-unpacking.info.acquired <- TRUE
+	unpacking.info.acquired <- TRUE
 }
 
 

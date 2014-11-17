@@ -5,7 +5,9 @@ NCEP.vis.points <- function(wx, lats, lons, cols=heat.colors(64), transparency=.
 if(length(wx) != length(lats) | length(wx) != length(lons)) {stop("length of 'wx' different from lengths of 'lats' and/or 'lons'")}
 
 ## Load the needed libraries ##
-require(maps); require(tgp)
+#importFrom(maps,map)
+#importFrom(fields,image.plot)
+#require(maps); require(tgp)
 
 ## Determine the range to show on the map ##
 lon.lim <- c(min(range(lons, na.rm=TRUE), na.rm=TRUE) - (diff(range(lons, na.rm=TRUE), na.rm=TRUE)*.1), 
