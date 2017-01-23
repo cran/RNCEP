@@ -7,7 +7,7 @@ function(variable, months.minmax, years.minmax, lat.minmax,
 ## 'months.minmax' must be given in the numeric format ##
 ## 'pressure' can be one of 1000.0, 925.0, 850.0, 700.0, 600.0, 500.0, 400.0, 300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 20.0, 10.0
 ## Variables must be given using the following naming conventions...
-	## 'air'	==	Air Temperature(ºK)
+	## 'air'	==	Air Temperature(K)
 	## 'hgt'	== 	Geopotential Height(m)
 	## 'rhum'	==	Relative Humidity(%)
 	## 'shum'	==	Specific Humidity(kg/kg)
@@ -161,7 +161,7 @@ if(loop.num == 1){
 trying.out <- 1
 fail <- 0
 while(trying.out != 0){
-trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.das", sep=''), scale.offset.missingvals.temp), silent=TRUE)
+trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.das", sep=''), mode="wb", method="libcurl", scale.offset.missingvals.temp), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.das into a web browser to obtain an error message.", sep = ""))}
@@ -183,7 +183,7 @@ if(return.units == TRUE){
 trying.out <- 1
 fail <- 0
 while(trying.out != 0){
-trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.ascii?",variable,"[",beg.jdate,":",end.jdate,"][",which(possible.levels == pressure)-1,"][",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"]", sep=''), out.temp), silent=TRUE)
+trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.ascii?",variable,"[",beg.jdate,":",end.jdate,"][",which(possible.levels == pressure)-1,"][",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"]", sep=''), mode="wb", method="libcurl", out.temp), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.ascii?",variable,"[",beg.jdate,":",end.jdate,"][",which(possible.levels == pressure)-1,"][",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"] into a web browser to obtain an error message.", sep = ""))}

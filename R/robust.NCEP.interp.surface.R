@@ -5,10 +5,10 @@ function(variable, lat, lon, dt,
 ## Latitude and longitude should be given in decimal degrees ##
 ## Variables must be given using the following naming conventions...
 	## 'air.sig995'		==	Air Temperature				(Near Surface)
-	## 'lftx.sfc'		==	Surface Lifted Index (ºK)		(At Surface)
-	## 'lftx4.sfc' 		==	Best (4-layer) Lifted Index(ºK)	(At Surface)
+	## 'lftx.sfc'		==	Surface Lifted Index (K)		(At Surface)
+	## 'lftx4.sfc' 		==	Best (4-layer) Lifted Index(K)	(At Surface)
 	## 'omega.sig995'		==	Omega [Vertical Velocity]		(Near Surface)
-	## 'pottmp.sig995'	==	Potential Temperature(ºK)		(Near Surface)
+	## 'pottmp.sig995'	==	Potential Temperature(K)		(Near Surface)
 	## 'pr_wtr.eatm'		==	Precipitable Water(kg/m2)		(Entire Atmosphere)
 	## 'pres.sfc'		==	Pressure					(At Surface)
 	## 'rhum.sig995'		==	Relative Humidity				(Near Surface)
@@ -254,7 +254,7 @@ if(i == 1 | keep.unpacking.info == FALSE){
 trying.out <- 1
 fail <- 0
 while(trying.out != 0){
-trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.das", sep=''), scale.offset.missingvals.temp), silent=TRUE)
+trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.das", sep=''), mode="wb", method="libcurl", scale.offset.missingvals.temp), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.das into a web browser to obtain an error message.", sep = ""))}
@@ -281,28 +281,28 @@ units[i] <- strsplit(all.units[which(all.loc.units > var.loc.units)[1]], "\"")[[
 	trying.out.east.year2 <- 1
 fail <- 0
 while(trying.out.west.year1 != 0){
-trying.out.west.year1 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"]", sep=''), out.temp.west.year1), silent=TRUE)
+trying.out.west.year1 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"]", sep=''), mode="wb", method="libcurl", out.temp.west.year1), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"] into a web browser to obtain an error message.", sep = ""))}
 }
 fail <- 0
 while(trying.out.west.year2 != 0){
-trying.out.west.year2 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"]", sep=''), out.temp.west.year2), silent=TRUE)
+trying.out.west.year2 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"]", sep=''), mode="wb", method="libcurl", out.temp.west.year2), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[1],"] into a web browser to obtain an error message.", sep = ""))}
 }
 fail <- 0
 while(trying.out.east.year1 != 0){
-trying.out.east.year1 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"]", sep=''), out.temp.east.year1), silent=TRUE)
+trying.out.east.year1 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"]", sep=''), mode="wb", method="libcurl", out.temp.east.year1), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\n Try entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year1,".nc.ascii?",name,"[",beg.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"] into a web browser to obtain an error message.", sep = ""))}
 }
 fail <- 0
 while(trying.out.east.year2 != 0){
-trying.out.east.year2 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"]", sep=''), out.temp.east.year2), silent=TRUE)
+trying.out.east.year2 <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"]", sep=''), mode="wb", method="libcurl", out.temp.east.year2), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2[i] == TRUE, "2",""),"/surface/",variable[i],".",year2,".nc.ascii?",name,"[",end.jdate,"][",lat.range[1],":",lat.range[2],"][",lon.range[2],"] into a web browser to obtain an error message.", sep = ""))}

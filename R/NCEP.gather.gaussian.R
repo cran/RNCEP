@@ -227,7 +227,7 @@ if(loop.num == 1){
 trying.out <- 1
 fail <- 0
 while(trying.out != 0){
-trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/",gauss.name,"/",variable,".gauss.",year,".nc.das", sep=''), scale.offset.missingvals.temp), silent=TRUE)
+trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/",gauss.name,"/",variable,".gauss.",year,".nc.das", sep=''), mode="wb", method="libcurl", scale.offset.missingvals.temp), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided. 
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/",gauss.name,"/",variable,".gauss.",year,".nc.das into a web browser to obtain an error message.",sep=""))}
@@ -251,7 +251,7 @@ if(return.units == TRUE){
 trying.out <- 1
 fail <- 0
 while(trying.out != 0){
-trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2", ""),"/",gauss.name,"/",variable,".gauss.",year,".nc.ascii?",name,"[",beg.jdate,":",end.jdate,"]",ifelse(reanalysis2 == TRUE && all(c('sfc','ntat','hcb','hct','lcb','lct','mcb','mct','eatm') != level), "[0]",""),"[",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"]", sep=''), out.temp), silent=TRUE)
+trying.out <- try(download.file(paste("http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2", ""),"/",gauss.name,"/",variable,".gauss.",year,".nc.ascii?",name,"[",beg.jdate,":",end.jdate,"]",ifelse(reanalysis2 == TRUE && all(c('sfc','ntat','hcb','hct','lcb','lct','mcb','mct','eatm') != level), "[0]",""),"[",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"]", sep=''), mode="wb", method="libcurl", out.temp), silent=TRUE)
 fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2", ""),"/",gauss.name,"/",variable,".gauss.",year,".nc.ascii?",name,"[",beg.jdate,":",end.jdate,"]",ifelse(reanalysis2 == TRUE && all(c('sfc','ntat','hcb','hct','lcb','lct','mcb','mct','eatm') != level), "[0]",""),"[",lat.range[1],":",ifelse(length(lat.range) > 1, lat.range[2], lat.range[1]),"][",lon.range[1],":",ifelse(length(lon.range) > 1, lon.range[2], lon.range[1]),"] into a web browser to obtain an error message.",sep=""))}
