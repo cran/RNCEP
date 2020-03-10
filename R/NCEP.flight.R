@@ -17,6 +17,67 @@ if(beg.loc[2] == end.loc[2] & any(when2stop == 'longitude')){
 	stop("Cannot include 'longitude' in when2stop if beginning and ending longitude are the same")
 	}
 
+
+##############################################
+## Create a one-sided 'is.between' function ##
+is.between <- function(x, a, b) {
+if(b > a) { x < b } else
+if(a > b) { x > b }
+}
+##
+
+##########################################
+## Create an NCEP.new.lat.long function ##
+NCEP.new.lat.long <- function (long, lat, bearing, distance) 
+{
+    rad <- pi/180
+    a1 <- lat * rad
+    a2 <- long * rad
+    tc <- bearing * rad
+    d <- distance/6378.1
+    nlat <- asin(sin(a1) * cos(d) + cos(a1) * sin(d) * cos(tc))
+    dlon <- atan2(sin(tc) * sin(d) * cos(a1), cos(d) - sin(a1) * 
+        sin(nlat))
+    nlon <- ((a2 + dlon + pi)%%(2 * pi)) - pi
+    npts <- c(nlat/rad, nlon/rad)
+    return(npts)
+}
+
+########################################
+## Create an NCEP.earth.bear function ##
+NCEP.earth.bear <- function (long1, lat1, long2, lat2) 
+{
+    rad <- pi/180
+    a1 <- lat1 * rad
+    a2 <- long1 * rad
+    b1 <- lat2 * rad
+    b2 <- long2 * rad
+    dlon <- b2 - a2
+    bear <- atan2(sin(dlon) * cos(b1), cos(a1) * sin(b1) - sin(a1) * 
+        cos(b1) * cos(dlon))
+    deg <- (bear%%(2 * pi)) * (180/pi)
+    return(deg)
+}
+
+######################################
+## Create an NCEP.deg.dist function ##
+NCEP.deg.dist <- function (long1, lat1, long2, lat2) 
+{
+    rad <- pi/180
+    a1 <- lat1 * rad
+    a2 <- long1 * rad
+    b1 <- lat2 * rad
+    b2 <- long2 * rad
+    dlon <- b2 - a2
+    dlat <- b1 - a1
+    a <- (sin(dlat/2))^2 + cos(a1) * cos(b1) * (sin(dlon/2))^2
+    c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+    R <- 40041.47/(2 * pi)
+    d <- R * c
+    return(d)
+}
+
+
 #########################################
 ## Create vectors to store output data ##
 for(p in levels2consider){
@@ -26,19 +87,11 @@ for(p in levels2consider){
 lat <- beg.loc[1]
 lon <- beg.loc[2]
 dt <- begin.dt
-dist2goal <- deg.dist(long1=lon, lat1=lat, long2=end.loc[2], lat2=end.loc[1])
+dist2goal <- NCEP.deg.dist(long1=lon, lat1=lat, long2=end.loc[2], lat2=end.loc[1])
 fa <- c()
 best <- c()
 angle <- c()
 
-
-##############################################
-## Create a one-sided 'is.between' function ##
-is.between <- function(x, a, b) {
-if(b > a) { x < b } else
-if(a > b) { x > b }
-}
-##
 
 ################################
 ## Begin the loop
@@ -56,7 +109,7 @@ if(calibrate.dir == TRUE | loop == 1){
 		angle[loop] <- NCEP.loxodrome(lat1=lat[loop],lat2=end.loc[1],lon1=lon[loop],lon2=end.loc[2])
 		} else
 	if(path == 'great.circle' | path == 'NCEP.great.circle'){
-		angle[loop] <- earth.bear(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
+		angle[loop] <- NCEP.earth.bear(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
 		} else 
 	if(is.numeric(path)){
 		angle[loop] <- path 
@@ -180,7 +233,7 @@ new.distance <- sqrt(move.side^2+move.forward^2)
 latlon <- matrix(NA, ncol=2, nrow=evaluation.interval+1)
 latlon[1,] <- c(lat[loop],lon[loop])
 for(i in 2:length(latlon[,1])){
-	latlon[i,] <- new.lat.long(long=latlon[i-1,2], lat=latlon[i-1,1], bearing=new.bearing, distance=new.distance/1000)
+	latlon[i,] <- NCEP.new.lat.long(long=latlon[i-1,2], lat=latlon[i-1,1], bearing=new.bearing, distance=new.distance/1000)
 	}
 new.loc <- latlon[i,]
 
@@ -192,7 +245,7 @@ between.latlon <- cbind(is.between(latlon[,1], beg.loc[1], end.loc[1]), is.betwe
 ###################################################################################
 ## See if the bird has passed through the goal area between evaluation intervals ##
 if(any(lapply(when2stop, FUN=is.numeric) == TRUE)){
-outside.of.area <- deg.dist(long1=latlon[,2], lat1=latlon[,1], long2=end.loc[2], lat2=end.loc[1]) > when2stop[[which(lapply(when2stop, FUN=is.numeric) == TRUE)]]
+outside.of.area <- NCEP.deg.dist(long1=latlon[,2], lat1=latlon[,1], long2=end.loc[2], lat2=end.loc[1]) > when2stop[[which(lapply(when2stop, FUN=is.numeric) == TRUE)]]
 }
 
 ############################################################################
@@ -242,7 +295,7 @@ lon[loop] <- new.loc[2]
 
 ##################################################
 ## Assign the new distance to the end goal (km) ##
-dist2goal[loop] <- deg.dist(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
+dist2goal[loop] <- NCEP.deg.dist(long1=lon[loop], lat1=lat[loop], long2=end.loc[2], lat2=end.loc[1])
 
 ##
 ######################################

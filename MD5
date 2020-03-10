@@ -1,5 +1,5 @@
-441bc505c2405ce89e20eda9fff9e73e *DESCRIPTION
-15873da6204b57d97b06ed06e7831d3b *NAMESPACE
+598e13a8b76e72a77d98dcf09a9f9480 *DESCRIPTION
+76f7b5143230369949ddb01dd93e3aba *NAMESPACE
 286de8bf26f066b9c3db42b22f0b14d8 *R/NCEP.Airspeed.R
 b6d7592a1727affad7a35c2c3b37f02e *R/NCEP.FlowSpeed.R
 c7681b706002047273525e4c02da4b0d *R/NCEP.Groundspeed.R
@@ -10,7 +10,7 @@ a2c2162285100e7ac8b2c4fc3076b596 *R/NCEP.Tailwind.R
 3312b539343bb753030901c8fbf59898 *R/NCEP.aggregate.R
 6e9d1048f7fc14f4f0ac379ab48ab9c9 *R/NCEP.array2df.R
 359289e00493db201858e0e58eac7b27 *R/NCEP.bind.R
-5b7521e520c700dd216d140c8bb0a3bd *R/NCEP.flight.R
+7d6a635471c7dbbdb6cdf9840a6210ca *R/NCEP.flight.R
 26451e311cdde249b73532f865a77728 *R/NCEP.gather.R
 06edfe182b2153cb4ffe0270ace1490a *R/NCEP.gather.gaussian.R
 2ed3410076822ed4f5d5aa191b16c08c *R/NCEP.gather.pressure.R
@@ -25,7 +25,6 @@ b18a6a37e203b25a095ce5cd0946881b *R/NCEP.restrict.R
 3ccad5f729d63774f437b299d021ffef *R/NCEP.uv.revert.R
 0bec9bf6382a0d53f6e8784e81fd3365 *R/NCEP.vis.area.R
 8510562085e8d079853a24f477803866 *R/NCEP.vis.points.R
-bda6f68a0c43859fb2101f4de0da6814 *R/RNCEP-internal.R
 00513645278efc719cb17c706635cf77 *R/robust.NCEP.interp.gaussian.R
 684f952856fc1b23b68590be3a556cc5 *R/robust.NCEP.interp.pressure.R
 190d84c0b25cf0f7a20d5c236c0bfcfb *R/robust.NCEP.interp.surface.R
@@ -50,5 +49,5 @@ f066fb479510fd290251130b75e1c986 *man/NCEP.loxodrome.Rd
 db58e3991939695c5690763a20870c50 *man/NCEP.uv.revert.Rd
 8ea8d2cdb8c73ef7bb1a70fbfacced01 *man/NCEP.vis.area.Rd
 2a9f6aaf3c8d48d6ac87d73243cf2519 *man/NCEP.vis.points.Rd
-d8cefb556dc83f07ad2fecb4953786a8 *man/RNCEP-package.Rd
+43cd2faa3584eea1793b659e13cd2934 *man/RNCEP-package.Rd
 4927e26c16ae020d6306fc1d3bf8d4c7 *man/gull.Rd

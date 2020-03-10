@@ -30,8 +30,8 @@ This package contains functions to...
 \tabular{ll}{
 Package: \tab RNCEP\cr
 Type: \tab Package\cr
-Version: \tab 1.0.8\cr
-Date: \tab 2017-01-21\cr
+Version: \tab 1.0.9\cr
+Date: \tab 2020-03-06\cr
 License: \tab GPL (>=2) \cr
 LazyLoad: \tab yes\cr
 }
