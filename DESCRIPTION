@@ -1,8 +1,8 @@
 Package: RNCEP
 Type: Package
 Title: Obtain, Organize, and Visualize NCEP Weather Data
-Version: 1.0.9
-Date: 2020-02-19
+Version: 1.0.10
+Date: 2020-05-26
 Author: Michael U. Kemp <mukemp+RNCEP@gmail.com> with contributions from E. Emiel van Loon, Judy Shamoun-Baranes, and Willem Bouten
 Maintainer: Michael U. Kemp <mukemp+RNCEP@gmail.com>
 Description: Contains functions to retrieve, organize, and visualize weather data from the NCEP/NCAR Reanalysis (<http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.html>) and NCEP/DOE Reanalysis II (<http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis2.html>) datasets.  Data are queried via the Internet and may be obtained for a specified spatial and temporal extent or interpolated to a point in space and time.  We also provide functions to visualize these weather data on a map.  There are also functions to simulate flight trajectories according to specified behavior using either NCEP wind data or data specified by the user.
@@ -13,7 +13,7 @@ LazyData: true
 Depends: R (>= 2.10), maps
 URL: https://www.esrl.noaa.gov/psd/data/gridded/reanalysis/
         https://sites.google.com/site/michaelukemp/home
-Packaged: 2020-03-10 17:02:29 UTC; michael.kemp
+Packaged: 2020-05-26 22:55:05 UTC; michael.kemp
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2020-03-10 18:10:09 UTC
+Date/Publication: 2020-05-27 05:30:22 UTC

@@ -166,8 +166,8 @@ fail <- fail + 1
 if(fail >= 5) {stop(paste("\nThere is a problem connecting to the NCEP database with the information provided.
 	\nTry entering http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/ncep.reanalysis",ifelse(reanalysis2 == TRUE, "2",""),"/pressure/",variable,".",year,".nc.das into a web browser to obtain an error message.", sep = ""))}
 }
-add.offset <- if(reanalysis2 == TRUE){ as.numeric(strsplit(strsplit(grep('add_offset', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'add_offset ')[[1]][2]) } else { 0 }
-scale.factor <- if(reanalysis2 == TRUE){ as.numeric(strsplit(strsplit(grep('scale_factor', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'scale_factor ')[[1]][2]) } else { 1 }
+add.offset <- if(any(grepl('add_offset', x=readLines(scale.offset.missingvals.temp)))){ as.numeric(strsplit(strsplit(grep('add_offset', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'add_offset ')[[1]][2]) } else { 0 }
+scale.factor <- if(any(grepl('scale_factor', x=readLines(scale.offset.missingvals.temp)))){ as.numeric(strsplit(strsplit(grep('scale_factor', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'scale_factor ')[[1]][2]) } else { 1 }
 missing.values <- as.numeric(strsplit(strsplit(grep('missing_value', x=readLines(scale.offset.missingvals.temp), value=TRUE, fixed=TRUE), ';')[[1]][1], 'missing_value ')[[1]][2])
 if(return.units == TRUE){
 	var.loc.units <- min(grep(variable, x = readLines(scale.offset.missingvals.temp), value = FALSE, fixed = TRUE))
